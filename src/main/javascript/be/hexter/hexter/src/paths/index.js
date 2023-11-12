@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Route, Routes } from "react-router-dom";
-import Menu from "../components/menu";
 import LandingPage from "./path/landingPage";
 import LoginPage from "./path/loginPage";
 import RegisterPage from "./path/registerPage";
@@ -13,7 +12,6 @@ const mapStateToProps = ({ state }) => ({
 function Paths({ authenticationToken }) {
   return (
     <>
-      {authenticationToken && <Menu />}
       <Routes>
         {(authenticationToken && (
           <>
