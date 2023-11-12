@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com;
+package be.hexter.hexter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

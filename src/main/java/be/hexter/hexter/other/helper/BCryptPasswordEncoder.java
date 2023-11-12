@@ -1,6 +1,6 @@
-package be.patryksitko.contest.ip2location.com.other.helper;
+package be.hexter.hexter.other.helper;
 
-import be.patryksitko.contest.ip2location.com.other.helper.exception.PasswordFormatException;
+import be.hexter.hexter.other.helper.exception.PasswordFormatException;
 
 public interface BCryptPasswordEncoder {
 

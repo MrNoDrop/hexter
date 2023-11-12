@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.other.builder;
+package be.hexter.hexter.other.builder;
 
 import java.util.List;
 

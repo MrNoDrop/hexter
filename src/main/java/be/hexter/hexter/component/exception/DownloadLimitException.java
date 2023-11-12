@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.component.exception;
+package be.hexter.hexter.component.exception;
 
 public class DownloadLimitException extends RuntimeException {
     public DownloadLimitException() {

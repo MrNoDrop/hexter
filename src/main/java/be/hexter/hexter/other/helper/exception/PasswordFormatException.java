@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.other.helper.exception;
+package be.hexter.hexter.other.helper.exception;
 
 public class PasswordFormatException extends RuntimeException {
 

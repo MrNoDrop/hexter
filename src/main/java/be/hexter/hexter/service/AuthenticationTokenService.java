@@ -1,6 +1,6 @@
-package be.patryksitko.contest.ip2location.com.service;
+package be.hexter.hexter.service;
 
-import be.patryksitko.contest.ip2location.com.model.AuthenticationToken;
+import be.hexter.hexter.model.AuthenticationToken;
 
 public interface AuthenticationTokenService {
 

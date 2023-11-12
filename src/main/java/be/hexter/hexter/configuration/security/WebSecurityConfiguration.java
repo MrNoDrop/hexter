@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.configuration.security;
+package be.hexter.hexter.configuration.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

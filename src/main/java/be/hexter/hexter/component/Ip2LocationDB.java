@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.component;
+package be.hexter.hexter.component;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -30,9 +30,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ip2location.IP2Location;
 import com.ip2location.IPResult;
 
-import be.patryksitko.contest.ip2location.com.component.exception.DownloadLimitException;
-import be.patryksitko.contest.ip2location.com.component.exception.InitializationException;
-import be.patryksitko.contest.ip2location.com.other.anonFunctions.ByteArrayFunction;
+import be.hexter.hexter.component.exception.DownloadLimitException;
+import be.hexter.hexter.component.exception.InitializationException;
+import be.hexter.hexter.other.anonFunctions.ByteArrayFunction;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

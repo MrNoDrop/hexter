@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.controller;
+package be.hexter.hexter.controller;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,18 +19,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import be.patryksitko.contest.ip2location.com.model.AuthenticationToken;
-import be.patryksitko.contest.ip2location.com.model.Credential;
-import be.patryksitko.contest.ip2location.com.model.User;
-import be.patryksitko.contest.ip2location.com.other.builder.ResponseBuilder;
-import be.patryksitko.contest.ip2location.com.other.builder.ResponseBuilder.ResponseType;
-import be.patryksitko.contest.ip2location.com.other.helper.BCryptPasswordEncoder;
-import be.patryksitko.contest.ip2location.com.other.helper.exception.PasswordFormatException;
-import be.patryksitko.contest.ip2location.com.service.AuthenticationTokenService;
-import be.patryksitko.contest.ip2location.com.service.UserService;
-import be.patryksitko.contest.ip2location.com.service.exception.EmailRegisteredException;
-import be.patryksitko.contest.ip2location.com.service.exception.EmailUnregisteredException;
-import be.patryksitko.contest.ip2location.com.service.exception.PasswordMismatchException;
+import be.hexter.hexter.model.AuthenticationToken;
+import be.hexter.hexter.model.Credential;
+import be.hexter.hexter.model.User;
+import be.hexter.hexter.other.builder.ResponseBuilder;
+import be.hexter.hexter.other.builder.ResponseBuilder.ResponseType;
+import be.hexter.hexter.other.helper.BCryptPasswordEncoder;
+import be.hexter.hexter.other.helper.exception.PasswordFormatException;
+import be.hexter.hexter.service.AuthenticationTokenService;
+import be.hexter.hexter.service.UserService;
+import be.hexter.hexter.service.exception.EmailRegisteredException;
+import be.hexter.hexter.service.exception.EmailUnregisteredException;
+import be.hexter.hexter.service.exception.PasswordMismatchException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

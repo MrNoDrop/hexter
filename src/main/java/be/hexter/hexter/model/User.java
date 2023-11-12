@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.model;
+package be.hexter.hexter.model;
 
 import java.io.Serializable;
 

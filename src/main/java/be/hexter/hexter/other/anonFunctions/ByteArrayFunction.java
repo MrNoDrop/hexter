@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.other.anonFunctions;
+package be.hexter.hexter.other.anonFunctions;
 
 public interface ByteArrayFunction {
 

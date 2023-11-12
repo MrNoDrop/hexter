@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.service.exception;
+package be.hexter.hexter.service.exception;
 
 public class EmailRegisteredException extends RuntimeException {
 

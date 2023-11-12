@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.model;
+package be.hexter.hexter.model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import be.patryksitko.contest.ip2location.com.other.helper.BCryptPasswordEncoder;
+import be.hexter.hexter.other.helper.BCryptPasswordEncoder;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

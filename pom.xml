@@ -8,17 +8,17 @@
 		<version>2.7.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>be.patryksitko</groupId>
-	<artifactId>contest.ip2location.com</artifactId>
+	<groupId>be.hexter</groupId>
+	<artifactId>hexter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>contest.ip2location.com by Patryk Sitko</name>
-	<description>Spring Boot ip2location contest entry.</description>
+	<name>hexter, the social media platform</name>
+	<description>A competitor to "x" and "fb"</description>
 	<properties>
 		<java.version>17</java.version>
 		<frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
 		<node.version>v20.9.0</node.version>
 		<npm.version>10.2.3</npm.version>
-		<frontend.dir>${basedir}/src/main/javascript/be/patryksitko/contest/ip2location/com/frontend</frontend.dir>
+		<frontend.dir>${basedir}/src/main/javascript/be/hexter/hexter</frontend.dir>
 	</properties>
 	<profiles>
 		<profile>

@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.controller;
+package be.hexter.hexter.controller;
 
 import javax.servlet.http.HttpServletRequest;
 

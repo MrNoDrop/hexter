@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.controller.advice;
+package be.hexter.hexter.controller.advice;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
-import be.patryksitko.contest.ip2location.com.other.builder.ResponseBuilder;
-import be.patryksitko.contest.ip2location.com.other.builder.ResponseBuilder.ResponseType;
+import be.hexter.hexter.other.builder.ResponseBuilder;
+import be.hexter.hexter.other.builder.ResponseBuilder.ResponseType;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

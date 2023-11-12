@@ -1,11 +1,11 @@
-package be.patryksitko.contest.ip2location.com.service;
+package be.hexter.hexter.service;
 
-import be.patryksitko.contest.ip2location.com.model.AuthenticationToken;
-import be.patryksitko.contest.ip2location.com.model.Credential;
-import be.patryksitko.contest.ip2location.com.model.User;
-import be.patryksitko.contest.ip2location.com.service.exception.EmailRegisteredException;
-import be.patryksitko.contest.ip2location.com.service.exception.EmailUnregisteredException;
-import be.patryksitko.contest.ip2location.com.service.exception.PasswordMismatchException;
+import be.hexter.hexter.model.AuthenticationToken;
+import be.hexter.hexter.model.Credential;
+import be.hexter.hexter.model.User;
+import be.hexter.hexter.service.exception.EmailRegisteredException;
+import be.hexter.hexter.service.exception.EmailUnregisteredException;
+import be.hexter.hexter.service.exception.PasswordMismatchException;
 
 public interface UserService {
 

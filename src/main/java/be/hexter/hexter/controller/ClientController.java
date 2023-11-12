@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.controller;
+package be.hexter.hexter.controller;
 
 import java.util.Optional;
 
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ip2location.IPResult;
 
-import be.patryksitko.contest.ip2location.com.component.Ip2LocationDB;
-import be.patryksitko.contest.ip2location.com.component.Ip2LocationDB.IPResultJSONizer;
-import be.patryksitko.contest.ip2location.com.other.builder.ResponseBuilder;
-import be.patryksitko.contest.ip2location.com.other.builder.ResponseBuilder.ResponseType;
+import be.hexter.hexter.component.Ip2LocationDB;
+import be.hexter.hexter.component.Ip2LocationDB.IPResultJSONizer;
+import be.hexter.hexter.other.builder.ResponseBuilder;
+import be.hexter.hexter.other.builder.ResponseBuilder.ResponseType;
 
 @RestController
 @RequestMapping("/api/client")

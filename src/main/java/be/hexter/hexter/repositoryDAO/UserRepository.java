@@ -1,10 +1,10 @@
-package be.patryksitko.contest.ip2location.com.repositoryDAO;
+package be.hexter.hexter.repositoryDAO;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import be.patryksitko.contest.ip2location.com.model.User;
+import be.hexter.hexter.model.User;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {

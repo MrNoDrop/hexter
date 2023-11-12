@@ -1,4 +1,4 @@
-package be.patryksitko.contest.ip2location.com.repositoryDAO;
+package be.hexter.hexter.repositoryDAO;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import be.patryksitko.contest.ip2location.com.model.AuthenticationToken;
+import be.hexter.hexter.model.AuthenticationToken;
 
 @Repository
 public interface AuthenticationTokenRepository extends CrudRepository<AuthenticationToken, Long> {
