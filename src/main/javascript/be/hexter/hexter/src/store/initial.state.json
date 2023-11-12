@@ -13,7 +13,6 @@
         "undirtyFormAllowed": true
       }
     },
-    "my-ip-data": null,
     "cookie": {
       "CSRF-TOKEN": null,
       "authentication-token": null
