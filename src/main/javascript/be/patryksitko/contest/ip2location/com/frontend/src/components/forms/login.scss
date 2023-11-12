@@ -1,0 +1,51 @@
+.login-form {
+  height: max-content;
+  padding: 1rem;
+  border: 0.2rem solid #ececec;
+  border-radius: 8px;
+  margin-right: 0;
+  margin-left: 0;
+  color: #212529;
+  transition: ease all 0.5s;
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  transform: translate(-50%, -50%);
+  .text-muted {
+    display: block;
+    margin: auto;
+    white-space: nowrap;
+    text-align: center;
+  }
+  button.login {
+    min-width: 100%;
+  }
+  button.register {
+    margin-top: 7px;
+    width: 120px;
+    float: right;
+  }
+  a.forgot-password {
+    max-width: max-content;
+    display: inline-block;
+    margin-top: 15px;
+    margin-right: 0px;
+  }
+  .invalid-feedback {
+    text-align: center;
+  }
+  .feedback-invalid {
+    line-height: 1;
+    margin-bottom: 25px;
+    text-align: center;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+  }
+  label.email,
+  label.password {
+    width: 100%;
+    text-align: center;
+  }
+}

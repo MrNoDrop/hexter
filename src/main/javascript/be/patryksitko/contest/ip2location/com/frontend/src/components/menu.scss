@@ -1,0 +1,13 @@
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+.navbar-brand > .buffer {
+  width: 40px;
+}
+.navbar-brand > img {
+  position: fixed;
+  left: -10px;
+  padding: 7px 14px;
+  width: 70px;
+}

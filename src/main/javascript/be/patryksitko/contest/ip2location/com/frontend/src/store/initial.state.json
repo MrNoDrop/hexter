@@ -1,0 +1,33 @@
+{
+  "state": {
+    "fingerprint": null,
+    "form": {
+      "login": { "email": "", "password": "", "errors": {} },
+      "register": {
+        "firstname": "",
+        "lastname": "",
+        "email": "",
+        "password": "",
+        "repassword": "",
+        "errors": {},
+        "undirtyFormAllowed": true
+      }
+    },
+    "my-ip-data": null,
+    "cookie": {
+      "CSRF-TOKEN": null,
+      "authentication-token": null
+    },
+    "window": {
+      "inner": null,
+      "outer": null
+    },
+    "updateTick": 0
+  },
+  "router": {
+    "pathname": "/",
+    "search": "",
+    "queries": {},
+    "hash": ""
+  }
+}
