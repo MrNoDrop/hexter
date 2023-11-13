@@ -70,11 +70,10 @@ public class User implements Serializable, Cloneable {
     @Column(name = "lastname", nullable = false)
     public String lastname;
 
-    @NonNull
     @Setter
     @JsonProperty("hash")
-    @Column(name="hash", nullable = false, unique = false)
-    public Integer hash;
+    @Column(name="hash", unique = false)
+    public String hash;
 
     @NonNull
     @JsonProperty("credential")
