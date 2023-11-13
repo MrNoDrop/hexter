@@ -17,6 +17,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     User findUserByLastname(String lastname);
 
-    @Query("SELECT user From User AS user Where user.firstname = ?1 AND user.lastname = ?2")
+    @Query("SELECT user From User AS user WHERE user.firstname = ?1 AND user.lastname = ?2")
     List<User> findUsergroupByFirstAndLastName(String firstname, String lastname);
 }
