@@ -10,4 +10,8 @@ import be.hexter.hexter.model.User;
 public interface UserRepository extends CrudRepository<User, Long> {
     @Query("SELECT user FROM User AS user INNER JOIN user.credential AS credential WHERE credential.email = ?1")
     User findByEmail(String email);
+
+    User findUserByFirstname(String firstname);
+
+    User findUserByLastname(String lastname);
 }

@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import be.hexter.hexter.model.AuthenticationToken;
@@ -72,5 +73,23 @@ public class UserServiceImplementation implements UserService {
                         .authenticationToken(UUID.randomUUID()).build());
         registeredAuthenticationToken.setFingerprint("hidden.");
         return registeredAuthenticationToken;
+    }
+
+    @Override
+    public User findUserByFirstname(String firstname) throws UsernameNotFoundException {
+        final User user = userRepository.findUserByFirstname(firstname);
+        if (user instanceof User) {
+            return user;
+        }
+        throw new UsernameNotFoundException(firstname);
+    }
+
+    @Override
+    public User findUserByLastname(String lastname) throws UsernameNotFoundException {
+        final User user = userRepository.findUserByLastname(lastname);
+        if (user instanceof User) {
+            return user;
+        }
+        throw new UsernameNotFoundException(lastname);
     }
 }
