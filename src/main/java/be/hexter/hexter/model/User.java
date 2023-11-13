@@ -71,6 +71,12 @@ public class User implements Serializable, Cloneable {
     public String lastname;
 
     @NonNull
+    @Setter
+    @JsonProperty("hash")
+    @Column(name="hash", nullable = false, unique = false)
+    public Integer hash;
+
+    @NonNull
     @JsonProperty("credential")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "credential_id", value = ConstraintMode.CONSTRAINT), referencedColumnName = "id")
