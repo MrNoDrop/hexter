@@ -31,7 +31,7 @@ function Paths({ authenticationToken }) {
             <Route
               path="/forgot-password"
               exact
-              element={<PasswordRecovery />}
+              element={<PasswordRecoveryPage />}
             />
             <Route path="/:name" exact element={<Redirect path="/login" />} />
           </>
