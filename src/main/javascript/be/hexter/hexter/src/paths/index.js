@@ -5,6 +5,7 @@ import LandingPage from "./path/landingPage";
 import LoginPage from "./path/loginPage";
 import RegisterPage from "./path/registerPage";
 import Redirect from "../components/redirect";
+import PasswordRecovery from "../components/forms/passwordRecovery";
 
 const mapStateToProps = ({ state }) => ({
   authenticationToken: state.cookie["authentication-token"],
@@ -27,6 +28,11 @@ function Paths({ authenticationToken }) {
               <Route {...{ path, key }} exact element={<LoginPage />} />
             ))}
             <Route path="/register" exact element={<RegisterPage />} />
+            <Route
+              path="/forgot-password"
+              exact
+              element={<PasswordRecovery />}
+            />
             <Route path="/:name" exact element={<Redirect path="/login" />} />
           </>
         )}
