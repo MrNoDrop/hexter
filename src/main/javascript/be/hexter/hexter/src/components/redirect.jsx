@@ -14,7 +14,7 @@ function Redirect({ updateTick, path, changePath }) {
   const navigateTo = useNavigate();
   useEffect(() => {
     changePath(path);
-  }, [updateTick]);
+  }, [updateTick, changePath, path]);
   navigateTo(path);
 
   return <>redirecting..</>;
