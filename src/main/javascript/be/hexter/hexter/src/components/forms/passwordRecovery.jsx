@@ -1,7 +1,7 @@
 import React from "react";
 
 function PasswordRecovery() {
-  return <></>;
+  return "forgot password?";
 }
 
 export default PasswordRecovery;
