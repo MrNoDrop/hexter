@@ -16,10 +16,8 @@ function Paths({ authenticationToken }) {
       <Routes>
         {authenticationToken && (
           <>
-            {["/login", "/register"].map((path, key) => (
-              <Route {...{ path, key }} exact element={<Redirect path="/" />} />
-            ))}
             <Route path="/" exact element={<LandingPage />} />
+            <Route path="/:name" exact element={<Redirect path="/" />} />
           </>
         )}
         ||
@@ -29,6 +27,7 @@ function Paths({ authenticationToken }) {
               <Route {...{ path, key }} exact element={<LoginPage />} />
             ))}
             <Route path="/register" exact element={<RegisterPage />} />
+            <Route path="/:name" exact element={<Redirect path="/login" />} />
           </>
         )}
       </Routes>
