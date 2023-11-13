@@ -18,6 +18,7 @@ import be.hexter.hexter.service.UserService;
 import be.hexter.hexter.service.exception.EmailRegisteredException;
 import be.hexter.hexter.service.exception.EmailUnregisteredException;
 import be.hexter.hexter.service.exception.PasswordMismatchException;
+import be.hexter.hexter.service.exception.UsergroupNotFoundException;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -91,5 +92,15 @@ public class UserServiceImplementation implements UserService {
             return user;
         }
         throw new UsernameNotFoundException(lastname);
+    }
+
+    @Override
+    public List<User> findUsergroupByFirstnameAndLastname(String firstname, String lastname)
+            throws UsergroupNotFoundException {
+        final List<User> user = userRepository.findUsergroupByFirstAndLastName(firstname,lastname);
+        if (user instanceof List<User>) {
+            return user;
+        }
+        throw new UsergroupNotFoundException(firstname,lastname);
     }
 }
