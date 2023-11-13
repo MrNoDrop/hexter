@@ -1,5 +1,6 @@
 package be.hexter.hexter.service.implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import be.hexter.hexter.model.AuthenticationToken;
 import be.hexter.hexter.model.Credential;
 import be.hexter.hexter.model.User;
+import be.hexter.hexter.other.RandomHash;
 import be.hexter.hexter.other.helper.BCryptPasswordEncoder;
 import be.hexter.hexter.repositoryDAO.AuthenticationTokenRepository;
 import be.hexter.hexter.repositoryDAO.UserRepository;
@@ -35,6 +37,21 @@ public class UserServiceImplementation implements UserService {
             throw new EmailRegisteredException(user.getCredential().getEmail());
         }
         user.getCredential().setPassword(BCryptPasswordEncoder.getInstance.encode(user.getCredential().getPassword()));
+        final ArrayList<User> users = (ArrayList<User>) userRepository
+                .findUsergroupByFirstAndLastName(user.getFirstname(), user.getLastname());
+        String randomHash = null;
+        boolean foundMatch = false;
+        do {
+            foundMatch = false;
+            randomHash = RandomHash.generateRandomString(4);
+            for (int i = 0; i < users.size(); i++) {
+                if (users.get(i).getHash().equals(randomHash)) {
+                    foundMatch = true;
+                    break;
+                }
+            }
+        } while (foundMatch);
+        user.setHash(randomHash);
         return userRepository.save(user);
     }
 
@@ -97,10 +114,10 @@ public class UserServiceImplementation implements UserService {
     @Override
     public List<User> findUsergroupByFirstnameAndLastname(String firstname, String lastname)
             throws UsergroupNotFoundException {
-        final List<User> user = userRepository.findUsergroupByFirstAndLastName(firstname,lastname);
+        final List<User> user = userRepository.findUsergroupByFirstAndLastName(firstname, lastname);
         if (user instanceof List<User>) {
             return user;
         }
-        throw new UsergroupNotFoundException(firstname,lastname);
+        throw new UsergroupNotFoundException(firstname, lastname);
     }
 }
