@@ -12,21 +12,21 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class MailSender {
+public class GMailSender {
 
     private String username;// change accordingly
     private String password;
 
-    private static MailSender mailSender;
+    private static GMailSender mailSender;
 
-    private MailSender(String username, String password) {
+    private GMailSender(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public static MailSender authenticate(String username, String password) {
+    public static GMailSender authenticate(String username, String password) {
         if (mailSender == null || (mailSender.username != username || mailSender.password != password)) {
-            mailSender = new MailSender(username, password);
+            mailSender = new GMailSender(username, password);
         }
         return mailSender;
     }
