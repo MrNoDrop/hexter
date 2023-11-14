@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -99,8 +98,16 @@ public class UserController {
 
     @PostMapping(value = "/request-recover-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Object> requestRecoverPassword(@RequestBody @Valid String email) {
-        System.out.println("hello");
-        System.out.println(email);
+        User user;
+        HttpStatus statusOfHttp;
+        try {
+            user = userService.findUserByEmail(email);
+            statusOfHttp = HttpStatus.FOUND;
+        } catch (EmailUnregisteredException ex) {
+            statusOfHttp = HttpStatus.NOT_FOUND;
+            return ResponseEntity.status(statusOfHttp).body(ResponseBuilder.builder().status(statusOfHttp)
+                    .responseType(ResponseType.ERROR).errors(List.of(ex.getMessage())).build());
+        }
         return null;
     }
 
