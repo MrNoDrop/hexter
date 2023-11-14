@@ -37,11 +37,11 @@ const mapDispatchToProps = (dispatch) => ({
 
 const ReturnToLoginQuestion = ({ formik, initialErrors }) => {
   const formikErrorsIncludeRequiredErrorToShow = formik.errors.email?.includes(
-    `The email is already registered.`
+    `This email is already registered.`
   );
   const formikIsNotDirtyButErrorPersisted =
     !formik.dirty &&
-    initialErrors.email?.includes(`The email is already registered.`);
+    initialErrors.email?.includes(`This email is already registered.`);
   const show =
     formikErrorsIncludeRequiredErrorToShow || formikIsNotDirtyButErrorPersisted;
   return (
