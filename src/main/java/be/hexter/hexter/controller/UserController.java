@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import be.hexter.hexter.model.AuthenticationToken;
 import be.hexter.hexter.model.Credential;
 import be.hexter.hexter.model.User;
+import be.hexter.hexter.other.MailSender;
+import be.hexter.hexter.other.RandomHash;
 import be.hexter.hexter.other.builder.ResponseBuilder;
 import be.hexter.hexter.other.builder.ResponseBuilder.ResponseType;
 import be.hexter.hexter.other.helper.BCryptPasswordEncoder;
@@ -109,7 +114,16 @@ public class UserController {
             return ResponseEntity.status(statusOfHttp).body(ResponseBuilder.builder().status(statusOfHttp)
                     .responseType(ResponseType.ERROR).errors(List.of(ex.getMessage())).build());
         }
-        return null;
+        final String resetPasswordToken = RandomHash.generateRandomString(8).toUpperCase();
+        try {
+            MailSender.send(List.of(unwrappedEmail), "Hexter password reset",
+                    "Your reset token is: " + resetPasswordToken + ".");
+        } catch (MessagingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(statusOfHttp)
+                .body(ResponseBuilder.builder().status(statusOfHttp).responseType(ResponseType.SUCCESS).build());
     }
 
     // @GetMapping(value = "/recover-password", consumes =
