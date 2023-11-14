@@ -40,13 +40,14 @@ public class MailSender {
         message = new MimeMessage(session);
     }
 
-    public static void send(List<String> recipients, String subject, Message msg)
+    public static void send(List<String> recipients, String subject, String msg)
             throws MessagingException, AddressException, MessagingException {
         message.setFrom(new InternetAddress(USERNAME));
         for (String recipient : recipients) {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
         }
         message.setSubject(subject);
-        Transport.send(msg);
+        message.setText(msg);
+        Transport.send(message);
     }
 }
