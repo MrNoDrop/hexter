@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
+import httpStatus from "http-status";
 import { connect } from "react-redux";
 import Form from "react-bootstrap/Form";
 import { useFormik } from "formik";
@@ -42,8 +43,24 @@ function PasswordRecovery({
     initialValues,
     initialErrors,
     onSubmit: async ({ email }, { setSubmitting, setErrors }) => {
-      console.log(email);
-      setSubmitting(false);
+      try {
+        const result = await fetch("/api/user/request-recover-password", {
+          headers: {
+            "CSRF-TOKEN": csrfToken,
+            "Content-Type": "Application/json",
+          },
+          credentials: "include",
+          method: "POST",
+          body: JSON.stringify({
+            email,
+          }),
+        });
+        // const { status, responseType, errors, body } =
+        console.log(await result.json());
+      } catch (e) {
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
   return (
