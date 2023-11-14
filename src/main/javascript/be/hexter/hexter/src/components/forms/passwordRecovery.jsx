@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import updateForgotFormValues from "../../store/actions/form/forgot";
+import { goBack } from "redux-first-routing";
 import "./passwordRecovery.scss";
 
 const validationSchema = Yup.object({
@@ -18,11 +19,13 @@ const mapStateToProps = ({ state }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  goBack: (path) => dispatch(goBack(path)),
   updateForgotFormValues: (currentState, forgotValues) =>
     dispatch(updateForgotFormValues(currentState, forgotValues)),
 });
 
 function PasswordRecovery({
+  goBack,
   currentState,
   csrfToken,
   forgotValues,
@@ -38,11 +41,17 @@ function PasswordRecovery({
     validationSchema,
     initialValues,
     initialErrors,
-    onSubmit: () => {},
+    onSubmit: async ({ email }, { setSubmitting, setErrors }) => {
+      console.log(email);
+      setSubmitting(false);
+    },
   });
   return (
-    <Form className="password-recovery-form">
+    <Form className="password-recovery-form" onSubmit={formik.handleSubmit}>
       <Form.Group className="mb-3" controlId="formEmail">
+        <Button className="go-back" onClick={goBack}>
+          go back
+        </Button>
         <Form.Label>Forgot your password?</Form.Label>
         <Form.Control
           disabled={formik.isSubmitting}
