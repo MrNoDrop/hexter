@@ -9,9 +9,26 @@ import updateForgotFormValues from "../../store/actions/form/forgot";
 import { goBack } from "redux-first-routing";
 import "./passwordRecovery.scss";
 
+function parseErrors(errors) {
+  const parsedErrors = {};
+  errors.forEach((error) => {
+    const startOfErrorMessage = error.indexOf(":") + 1;
+    const errorMessage = error.substring(startOfErrorMessage, error.length);
+    const errorMessageType = error.substring(0, startOfErrorMessage);
+    switch (errorMessageType) {
+      default:
+        break;
+      case "[EMAIL]:":
+        parsedErrors.email = errorMessage;
+    }
+  });
+  return parsedErrors;
+}
+
 const validationSchema = Yup.object({
   email: Yup.string().email().required("Email is required."),
 });
+
 const mapStateToProps = ({ state }) => ({
   currentState: state,
   csrfToken: state.csrfToken,
@@ -55,8 +72,18 @@ function PasswordRecovery({
             email,
           }),
         });
-        // const { status, responseType, errors, body } =
-        console.log(await result.json());
+        const { status, responseType, errors, body } = await result.json();
+        console.log(errors);
+        if (responseType === "ERROR") {
+          switch (httpStatus[status]) {
+            default:
+              break;
+            case httpStatus.NOT_FOUND:
+            case httpStatus.CONFLICT:
+              setErrors({ ...formik.errors, ...parseErrors(errors) });
+              break;
+          }
+        }
       } catch (e) {
       } finally {
         setSubmitting(false);
