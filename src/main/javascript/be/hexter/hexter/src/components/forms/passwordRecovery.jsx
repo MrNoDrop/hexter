@@ -4,6 +4,7 @@ import httpStatus from "http-status";
 import { connect } from "react-redux";
 import Form from "react-bootstrap/Form";
 import { useFormik } from "formik";
+import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import updateForgotFormValues from "../../store/actions/form/forgot";
 import { goBack } from "redux-first-routing";
@@ -41,7 +42,25 @@ const mapDispatchToProps = (dispatch) => ({
   updateForgotFormValues: (currentState, forgotValues) =>
     dispatch(updateForgotFormValues(currentState, forgotValues)),
 });
-
+const GoToRegistryQuestion = ({ formik, initialErrors }) => {
+  const formikErrorsIncludeRequiredErrorToShow = formik.errors.email?.includes(
+    `This email is unregistered.`
+  );
+  const formikIsNotDirtyButErrorPersisted =
+    !formik.dirty &&
+    initialErrors.email?.includes(`This email is unregistered.`);
+  const show =
+    formikErrorsIncludeRequiredErrorToShow || formikIsNotDirtyButErrorPersisted;
+  return (
+    <div hidden={!show} className="action-suggestion">
+      Do you want to go to the{" "}
+      <Link className="go-to-registry-page" to="/register">
+        register
+      </Link>{" "}
+      page?
+    </div>
+  );
+};
 function PasswordRecovery({
   goBack,
   currentState,
@@ -91,63 +110,67 @@ function PasswordRecovery({
     },
   });
   return (
-    <Form className="password-recovery-form" onSubmit={formik.handleSubmit}>
-      <Form.Group className="mb-3" controlId="formEmail">
-        <Button className="go-back" onClick={goBack}>
-          go back
+    <>
+      <Form className="password-recovery-form" onSubmit={formik.handleSubmit}>
+        <Form.Group className="mb-3" controlId="formEmail">
+          <Button className="go-back" onClick={goBack}>
+            go back
+          </Button>
+          <Form.Label>Forgot your password?</Form.Label>
+          <Form.Control
+            disabled={formik.isSubmitting}
+            name="email"
+            type="email"
+            placeholder="Enter email"
+            onChange={(event) => {
+              updateForgotFormValues(currentState, {
+                email: event.target.value,
+                errors: forgotValues.errors,
+              });
+              formik.handleChange(event);
+            }}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
+            isValid={
+              (formik.touched.email || formik.values.email !== "") &&
+              ((formik.dirty && !initialErrors.email) ||
+                (!formik.errors.email && formik.values.email !== ""))
+            }
+            isInvalid={
+              (!formik.dirty && initialErrors.email) ||
+              ((formik.touched.email || initialErrors.email) &&
+                formik.errors.email)
+            }
+            feedback={
+              !formik.dirty && initialErrors.email
+                ? initialErrors.email
+                : formik.errors.email
+            }
+          />
+          {(!formik.errors.email && (
+            <Form.Text className="text-muted">
+              I'll never share your email with anyone else.
+            </Form.Text>
+          )) || (
+            <Form.Control.Feedback type="invalid">
+              {!formik.dirty && initialErrors.email
+                ? initialErrors.email
+                : formik.errors.email}
+              <GoToRegistryQuestion {...{ formik, initialErrors }} />
+            </Form.Control.Feedback>
+          )}
+        </Form.Group>
+        <Button
+          variant="primary"
+          type="submit"
+          className="login"
+          disabled={!formik.isValid || formik.isSubmitting}
+        >
+          Submit
         </Button>
-        <Form.Label>Forgot your password?</Form.Label>
-        <Form.Control
-          disabled={formik.isSubmitting}
-          name="email"
-          type="email"
-          placeholder="Enter email"
-          onChange={(event) => {
-            updateForgotFormValues(currentState, {
-              email: event.target.value,
-              errors: forgotValues.errors,
-            });
-            formik.handleChange(event);
-          }}
-          onBlur={formik.handleBlur}
-          value={formik.values.email}
-          isValid={
-            (formik.touched.email || formik.values.email !== "") &&
-            ((formik.dirty && !initialErrors.email) ||
-              (!formik.errors.email && formik.values.email !== ""))
-          }
-          isInvalid={
-            (!formik.dirty && initialErrors.email) ||
-            ((formik.touched.email || initialErrors.email) &&
-              formik.errors.email)
-          }
-          feedback={
-            !formik.dirty && initialErrors.email
-              ? initialErrors.email
-              : formik.errors.email
-          }
-        />
-        {(!formik.errors.email && (
-          <Form.Text className="text-muted">
-            I'll never share your email with anyone else.
-          </Form.Text>
-        )) || (
-          <Form.Control.Feedback type="invalid">
-            {!formik.dirty && initialErrors.email
-              ? initialErrors.email
-              : formik.errors.email}
-          </Form.Control.Feedback>
-        )}
-      </Form.Group>
-      <Button
-        variant="primary"
-        type="submit"
-        className="login"
-        disabled={!formik.isValid || formik.isSubmitting}
-      >
-        Submit
-      </Button>
-    </Form>
+      </Form>
+      here recovery area.
+    </>
   );
 }
 
