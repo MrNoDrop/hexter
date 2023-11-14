@@ -49,8 +49,51 @@ function PasswordRecovery({
           name="email"
           type="email"
           placeholder="Enter email"
+          onChange={(event) => {
+            updateForgotFormValues(currentState, {
+              email: event.target.value,
+              errors: forgotValues.errors,
+            });
+            formik.handleChange(event);
+          }}
+          onBlur={formik.handleBlur}
+          value={formik.values.email}
+          isValid={
+            (formik.touched.email || formik.values.email !== "") &&
+            ((formik.dirty && !initialErrors.email) ||
+              (!formik.errors.email && formik.values.email !== ""))
+          }
+          isInvalid={
+            (!formik.dirty && initialErrors.email) ||
+            ((formik.touched.email || initialErrors.email) &&
+              formik.errors.email)
+          }
+          feedback={
+            !formik.dirty && initialErrors.email
+              ? initialErrors.email
+              : formik.errors.email
+          }
         />
+        {(!formik.errors.email && (
+          <Form.Text className="text-muted">
+            I'll never share your email with anyone else.
+          </Form.Text>
+        )) || (
+          <Form.Control.Feedback type="invalid">
+            {!formik.dirty && initialErrors.email
+              ? initialErrors.email
+              : formik.errors.email}
+          </Form.Control.Feedback>
+        )}
       </Form.Group>
+      <Button
+        variant="primary"
+        type="submit"
+        className="login"
+        disabled={!formik.isValid || formik.isSubmitting}
+      >
+        Submit
+      </Button>
     </Form>
   );
 }
