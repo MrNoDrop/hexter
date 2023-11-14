@@ -14,11 +14,25 @@ import javax.mail.internet.MimeMessage;
 
 public class MailSender {
 
-    private static final String USERNAME = "patryk.sitko.algemeen@gmail.com";// change accordingly
-    private static final String PASSWORD = "bbfc vvue oxdf qfwk";
+    private String username;// change accordingly
+    private String password;
 
-    private static final Properties PROPS;
-    static {
+    private static MailSender mailSender;
+
+    private MailSender(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public static MailSender authenticate(String username, String password) {
+        if (mailSender == null || (mailSender.username != username || mailSender.password != password)) {
+            mailSender = new MailSender(username, password);
+        }
+        return mailSender;
+    }
+
+    private final Properties PROPS;
+    {
         PROPS = new Properties();
         PROPS.put("mail.smtp.auth", "true");
         PROPS.put("mail.smtp.starttls.enable", "true");
@@ -26,23 +40,23 @@ public class MailSender {
         PROPS.put("mail.smtp.port", "587");
     }
 
-    private static final Session session;
-    static {
+    private final Session session;
+    {
         session = Session.getInstance(PROPS, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(USERNAME, PASSWORD);
+                return new PasswordAuthentication(username, password);
             }
         });
     }
 
-    private static final Message message;
-    static {
+    private final Message message;
+    {
         message = new MimeMessage(session);
     }
 
-    public static void send(List<String> recipients, String subject, String msg)
+    public void send(List<String> recipients, String subject, String msg)
             throws MessagingException, AddressException, MessagingException {
-        message.setFrom(new InternetAddress(USERNAME));
+        message.setFrom(new InternetAddress(username));
         for (String recipient : recipients) {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
         }
