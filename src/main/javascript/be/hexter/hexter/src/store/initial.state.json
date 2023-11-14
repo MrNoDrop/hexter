@@ -2,6 +2,7 @@
   "state": {
     "fingerprint": null,
     "form": {
+      "forgot": { "email": "", "errors": {} },
       "login": { "email": "", "password": "", "errors": {} },
       "register": {
         "firstname": "",
