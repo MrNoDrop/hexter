@@ -100,8 +100,9 @@ public class UserController {
     public @ResponseBody ResponseEntity<Object> requestRecoverPassword(@RequestBody @Valid String email) {
         User user;
         HttpStatus statusOfHttp;
+        final String unwrappedEmail = email.substring(10, email.length() - 2);
         try {
-            user = userService.findUserByEmail(email);
+            user = userService.findUserByEmail(unwrappedEmail);
             statusOfHttp = HttpStatus.FOUND;
         } catch (EmailUnregisteredException ex) {
             statusOfHttp = HttpStatus.NOT_FOUND;
