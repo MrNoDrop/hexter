@@ -8,4 +8,5 @@ import be.hexter.hexter.model.CredentialRecovery;
 @Repository
 public interface CredentialRecoveryRepository extends CrudRepository<CredentialRecovery, Long> {
 
+    CredentialRecovery findByRecoveryToken(String recoveryToken);
 }

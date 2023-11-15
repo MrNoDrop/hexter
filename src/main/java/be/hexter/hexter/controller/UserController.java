@@ -1,5 +1,6 @@
 package be.hexter.hexter.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import be.hexter.hexter.model.AuthenticationToken;
 import be.hexter.hexter.model.Credential;
+import be.hexter.hexter.model.CredentialRecovery;
 import be.hexter.hexter.model.User;
 import be.hexter.hexter.other.GMailSender;
 import be.hexter.hexter.other.RandomHash;
@@ -30,6 +33,7 @@ import be.hexter.hexter.other.helper.BCryptPasswordEncoder;
 import be.hexter.hexter.other.helper.exception.PasswordFormatException;
 import be.hexter.hexter.service.AuthenticationTokenService;
 import be.hexter.hexter.service.UserService;
+import be.hexter.hexter.service.RecoveryService;
 import be.hexter.hexter.service.exception.EmailRegisteredException;
 import be.hexter.hexter.service.exception.EmailUnregisteredException;
 import be.hexter.hexter.service.exception.PasswordMismatchException;
@@ -42,6 +46,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RecoveryService recoveryService;
 
     @Autowired
     private AuthenticationTokenService authenticationTokenService;
@@ -123,16 +130,19 @@ public class UserController {
         } catch (MessagingException e) {
             log.error(e.getMessage());
         }
+        System.out.println(userService.findByRecoveryToken(resetPasswordToken));
         return ResponseEntity.status(statusOfHttp)
                 .body(ResponseBuilder.builder().status(statusOfHttp).responseType(ResponseType.SUCCESS).build());
     }
 
-    // @GetMapping(value = "/recover-password", consumes =
-    // MediaType.APPLICATION_JSON_VALUE, produces =
-    // MediaType.APPLICATION_JSON_VALUE)
-    // public @ResponseBody ResponseEntity<Object>
-    // recoverPassword(@RequestParam("email") String email,
-    // @RequestParam("recovery-token") UUID recoveryToken) {
-    // return null;
-    // }
+    @PostMapping(value = "/recover-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<Object> recoverPassword(
+            @RequestParam("recovery-token") String recoveryToken, @RequestParam("password") String password) {
+        final CredentialRecovery credentialRecovery = recoveryService.findByRecoveryToken(recoveryToken);
+        System.out.println(credentialRecovery.getTimestamp().toLocalTime().toNanoOfDay()
+                - LocalDateTime.now().toLocalTime().toNanoOfDay());
+        // final User user = userService.findByRecoveryToken(recoveryToken);
+        // final Credential credential = user.getCredential();
+        return null;
+    }
 }

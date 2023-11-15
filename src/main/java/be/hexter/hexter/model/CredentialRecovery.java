@@ -20,6 +20,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -42,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode(onlyExplicitlyIncluded = false)
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @AllArgsConstructor(onConstructor = @__(@JsonCreator), access = AccessLevel.PUBLIC)
+@JsonRootName(value = "credentialRecovery", namespace = "credentialRecoveries")
 @Entity
 @Table(name = "credential_recoveries")
 public class CredentialRecovery implements Serializable, Cloneable {
@@ -61,7 +63,7 @@ public class CredentialRecovery implements Serializable, Cloneable {
     @Column(name = "used", unique = false)
     public Boolean used;
 
-    @JsonProperty("recovery_token")
+    @JsonProperty("recovery-token")
     @Column(name = "recovery_token", unique = false)
     public String recoveryToken;
 

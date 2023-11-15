@@ -23,6 +23,7 @@ import be.hexter.hexter.service.UserService;
 import be.hexter.hexter.service.exception.EmailRegisteredException;
 import be.hexter.hexter.service.exception.EmailUnregisteredException;
 import be.hexter.hexter.service.exception.PasswordMismatchException;
+import be.hexter.hexter.service.exception.UserNotFoundException;
 import be.hexter.hexter.service.exception.UsergroupNotFoundException;
 
 @Service
@@ -131,6 +132,15 @@ public class UserServiceImplementation implements UserService {
     public void storeCredentialRecoveryToken(User user, String token) {
         credentialRecoveryRepository
                 .save(new CredentialRecovery(null, false, token, LocalDateTime.now(), user.getCredential()));
-        System.out.println(user);
+    }
+
+    @Override
+    public User findByRecoveryToken(String token) {
+        final CredentialRecovery credentialRecovery = credentialRecoveryRepository.findByRecoveryToken(token);
+
+        if (credentialRecovery.credential.getUser() instanceof User) {
+            return credentialRecovery.credential.getUser();
+        }
+        throw new UserNotFoundException();
     }
 }

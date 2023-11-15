@@ -27,6 +27,8 @@ public interface UserService {
 
         public void storeCredentialRecoveryToken(User user, String token);
 
+        public User findByRecoveryToken(String token);
+
         public AuthenticationToken authenticateUser(Credential credential)
                         throws EmailUnregisteredException, PasswordMismatchException;
 }
