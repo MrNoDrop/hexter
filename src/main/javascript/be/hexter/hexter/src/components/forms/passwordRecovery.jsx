@@ -73,6 +73,7 @@ function PasswordRecovery({
   const [initialValues] = useState({
     email: forgotValues.email,
   });
+  const [showRecoveryFields, setShowRecoveryFields] = useState(false);
   const [initialErrors] = useState(forgotValues.errors);
   const formik = useFormik({
     validationSchema,
@@ -92,7 +93,6 @@ function PasswordRecovery({
           }),
         });
         const { status, responseType, errors, body } = await result.json();
-        console.log(errors);
         if (responseType === "ERROR") {
           switch (httpStatus[status]) {
             default:
@@ -103,6 +103,10 @@ function PasswordRecovery({
               break;
           }
         }
+        if (responseType == "SUCCESS") {
+          setShowRecoveryFields(true);
+        }
+        console.log(responseType);
       } catch (e) {
       } finally {
         setSubmitting(false);
@@ -118,7 +122,7 @@ function PasswordRecovery({
           </Button>
           <Form.Label>Forgot your password?</Form.Label>
           <Form.Control
-            disabled={formik.isSubmitting}
+            disabled={formik.isSubmitting || showRecoveryFields}
             name="email"
             type="email"
             placeholder="Enter email"
@@ -164,7 +168,9 @@ function PasswordRecovery({
           variant="primary"
           type="submit"
           className="login"
-          disabled={!formik.isValid || formik.isSubmitting}
+          disabled={
+            !formik.isValid || formik.isSubmitting || showRecoveryFields
+          }
         >
           Submit
         </Button>
