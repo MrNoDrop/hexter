@@ -175,9 +175,13 @@ function PasswordRecovery({
           Submit
         </Button>
       </Form>
-      here recovery area.
+      {showRecoveryFields && <RecoveryForm />}
     </>
   );
+}
+
+function RecoveryForm() {
+  return "recovery form";
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PasswordRecovery);
