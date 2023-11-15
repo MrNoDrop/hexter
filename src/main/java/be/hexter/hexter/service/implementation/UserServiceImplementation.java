@@ -1,5 +1,6 @@
 package be.hexter.hexter.service.implementation;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 import be.hexter.hexter.model.AuthenticationToken;
 import be.hexter.hexter.model.Credential;
+import be.hexter.hexter.model.CredentialRecovery;
 import be.hexter.hexter.model.User;
 import be.hexter.hexter.other.RandomHash;
 import be.hexter.hexter.other.helper.BCryptPasswordEncoder;
 import be.hexter.hexter.repositoryDAO.AuthenticationTokenRepository;
+import be.hexter.hexter.repositoryDAO.CredentialRecoveryRepository;
 import be.hexter.hexter.repositoryDAO.UserRepository;
 import be.hexter.hexter.service.UserService;
 import be.hexter.hexter.service.exception.EmailRegisteredException;
@@ -27,6 +30,9 @@ public class UserServiceImplementation implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    CredentialRecoveryRepository credentialRecoveryRepository;
 
     @Autowired
     private AuthenticationTokenRepository authenticationTokenRepository;
@@ -119,5 +125,12 @@ public class UserServiceImplementation implements UserService {
             return user;
         }
         throw new UsergroupNotFoundException(firstname, lastname);
+    }
+
+    @Override
+    public void storeCredentialRecoveryToken(User user, String token) {
+        credentialRecoveryRepository
+                .save(new CredentialRecovery(null, false, token, LocalDateTime.now(), user.getCredential()));
+        System.out.println(user);
     }
 }

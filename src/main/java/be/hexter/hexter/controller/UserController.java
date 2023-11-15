@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import be.hexter.hexter.model.AuthenticationToken;
 import be.hexter.hexter.model.Credential;
 import be.hexter.hexter.model.User;
-import be.hexter.hexter.other.MailSender;
+import be.hexter.hexter.other.GMailSender;
 import be.hexter.hexter.other.RandomHash;
 import be.hexter.hexter.other.builder.ResponseBuilder;
 import be.hexter.hexter.other.builder.ResponseBuilder.ResponseType;
@@ -116,8 +116,10 @@ public class UserController {
         }
         final String resetPasswordToken = RandomHash.generateRandomString(8).toUpperCase();
         try {
-            MailSender.send(List.of(unwrappedEmail), "Hexter password reset",
+            GMailSender.authenticate("patryk.sitko.algemeen@gmail.com", "bbfc vvue oxdf qfwk").send(
+                    List.of(unwrappedEmail), "Hexter password reset",
                     "Your reset token is: " + resetPasswordToken + ".");
+            userService.storeCredentialRecoveryToken(user, resetPasswordToken);
         } catch (MessagingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

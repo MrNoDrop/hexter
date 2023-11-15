@@ -14,16 +14,19 @@ import be.hexter.hexter.service.exception.UsergroupNotFoundException;
 
 public interface UserService {
 
-    public User registerUser(User user) throws EmailRegisteredException;
+        public User registerUser(User user) throws EmailRegisteredException;
 
-    public User findUserByEmail(String email) throws EmailUnregisteredException;
+        public User findUserByEmail(String email) throws EmailUnregisteredException;
 
-    public User findUserByFirstname(String firstname) throws UsernameNotFoundException;
+        public User findUserByFirstname(String firstname) throws UsernameNotFoundException;
 
-    public User findUserByLastname(String lastname) throws UsernameNotFoundException;
+        public User findUserByLastname(String lastname) throws UsernameNotFoundException;
 
-    public List<User> findUsergroupByFirstnameAndLastname(String firstname,String lastname) throws UsergroupNotFoundException;
+        public List<User> findUsergroupByFirstnameAndLastname(String firstname, String lastname)
+                        throws UsergroupNotFoundException;
 
-    public AuthenticationToken authenticateUser(Credential credential)
-            throws EmailUnregisteredException, PasswordMismatchException;
+        public void storeCredentialRecoveryToken(User user, String token);
+
+        public AuthenticationToken authenticateUser(Credential credential)
+                        throws EmailUnregisteredException, PasswordMismatchException;
 }
