@@ -4,11 +4,12 @@ import httpStatus from "http-status";
 import { connect } from "react-redux";
 import Form from "react-bootstrap/Form";
 import { useFormik } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import updateForgotFormValues from "../../store/actions/form/forgot";
 import { goBack } from "redux-first-routing";
-import "./passwordRecovery.scss";
+import { push } from "redux-first-routing";
+import "./forgotPassword.scss";
 
 function parseErrors(errors) {
   const parsedErrors = {};
@@ -34,10 +35,10 @@ const mapStateToProps = ({ state }) => ({
   currentState: state,
   csrfToken: state.csrfToken,
   forgotValues: state.form.forgot,
-  fingerprint: state.fingerprint,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  changePath: (path) => dispatch(push(path)),
   goBack: (path) => dispatch(goBack(path)),
   updateForgotFormValues: (currentState, forgotValues) =>
     dispatch(updateForgotFormValues(currentState, forgotValues)),
@@ -61,19 +62,20 @@ const GoToRegistryQuestion = ({ formik, initialErrors }) => {
     </div>
   );
 };
-function PasswordRecovery({
+function ForgotPassword({
+  changePath,
   goBack,
   currentState,
   csrfToken,
   forgotValues,
-  fingerprint,
   updateForgotFormValues,
 }) {
-  // const navigateTo = useNavigate();
+  const navigateTo = useNavigate();
   const [initialValues] = useState({
     email: forgotValues.email,
   });
-  const [showRecoveryFields, setShowRecoveryFields] = useState(false);
+  const [succesfullySubmitted, setSuccessfullySubmitted] = useState(false);
+  const [recoveryToken, setRecoveryToken] = useState("");
   const [initialErrors] = useState(forgotValues.errors);
   const formik = useFormik({
     validationSchema,
@@ -104,7 +106,7 @@ function PasswordRecovery({
           }
         }
         if (responseType == "SUCCESS") {
-          setShowRecoveryFields(true);
+          setSuccessfullySubmitted(true);
         }
         console.log(responseType);
       } catch (e) {
@@ -122,7 +124,7 @@ function PasswordRecovery({
           </Button>
           <Form.Label>Forgot your password?</Form.Label>
           <Form.Control
-            disabled={formik.isSubmitting || showRecoveryFields}
+            disabled={formik.isSubmitting || succesfullySubmitted}
             name="email"
             type="email"
             placeholder="Enter email"
@@ -169,19 +171,28 @@ function PasswordRecovery({
           type="submit"
           className="login"
           disabled={
-            !formik.isValid || formik.isSubmitting || showRecoveryFields
+            !formik.isValid || formik.isSubmitting || succesfullySubmitted
           }
         >
-          Submit
+          {formik.isSubmitting
+            ? "Submitting"
+            : succesfullySubmitted
+            ? "Submitted"
+            : "Submit"}
+        </Button>
+        <Button
+          style={{ marginLeft: ".1vmin" }}
+          hidden={!succesfullySubmitted}
+          onClick={(e) => {
+            changePath("/recover-password");
+            navigateTo("/recover-password");
+          }}
+        >
+          Recover
         </Button>
       </Form>
-      {showRecoveryFields && <RecoveryForm />}
     </>
   );
 }
 
-function RecoveryForm() {
-  return "recovery form";
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PasswordRecovery);
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);

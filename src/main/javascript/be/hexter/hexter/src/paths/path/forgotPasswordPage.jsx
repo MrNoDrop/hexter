@@ -1,10 +1,10 @@
 import React from "react";
-import PasswordRecoveryForm from "../../components/forms/passwordRecovery";
+import ForgotPasswordForm from "../../components/forms/forgotPassword";
 
 function ForgotPasswordPage() {
   return (
     <>
-      <PasswordRecoveryForm />
+      <ForgotPasswordForm />
     </>
   );
 }
