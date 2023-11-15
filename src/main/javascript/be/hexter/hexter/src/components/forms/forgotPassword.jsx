@@ -70,12 +70,12 @@ function ForgotPassword({
   forgotValues,
   updateForgotFormValues,
 }) {
+  const [recoveryToken, setRecoveryToken] = useState(undefined);
   const navigateTo = useNavigate();
   const [initialValues] = useState({
     email: forgotValues.email,
   });
   const [succesfullySubmitted, setSuccessfullySubmitted] = useState(false);
-  const [recoveryToken, setRecoveryToken] = useState("");
   const [initialErrors] = useState(forgotValues.errors);
   const formik = useFormik({
     validationSchema,
@@ -167,6 +167,7 @@ function ForgotPassword({
           )}
         </Form.Group>
         <Button
+          style={{ width: "20vmin" }}
           variant="primary"
           type="submit"
           className="login"
@@ -180,8 +181,36 @@ function ForgotPassword({
             ? "Submitted"
             : "Submit"}
         </Button>
+
+        <Form.Group className="mb-3" controlId="formRecovery">
+          <Form.Label hidden={!succesfullySubmitted}>
+            Recover your account.
+          </Form.Label>
+          <Form.Control
+            placeholder="recovery token here"
+            hidden={!succesfullySubmitted}
+            value={recoveryToken}
+            style={{ textAlign: "center" }}
+            onChange={(event) => {
+              //continue from here.
+            }}
+          />
+          <Form.Label hidden={!succesfullySubmitted}>new password:</Form.Label>
+          <Form.Control placeholder="password" hidden={!succesfullySubmitted} />
+          <Form.Label hidden={!succesfullySubmitted}>
+            match new password:
+          </Form.Label>
+          <Form.Control
+            placeholder="retype password"
+            hidden={!succesfullySubmitted}
+          />
+        </Form.Group>
         <Button
-          style={{ marginLeft: ".1vmin" }}
+          style={{
+            marginLeft: ".1vmin",
+            marginTop: "0.3vmin",
+            width: "15vmin",
+          }}
           hidden={!succesfullySubmitted}
           onClick={(e) => {
             changePath("/recover-password");
@@ -190,6 +219,7 @@ function ForgotPassword({
         >
           Recover
         </Button>
+        <br />
       </Form>
     </>
   );

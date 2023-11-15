@@ -1,6 +1,7 @@
 package be.hexter.hexter.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
