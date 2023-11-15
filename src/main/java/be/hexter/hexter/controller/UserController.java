@@ -121,8 +121,7 @@ public class UserController {
                     "Your reset token is: " + resetPasswordToken + ".");
             userService.storeCredentialRecoveryToken(user, resetPasswordToken);
         } catch (MessagingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return ResponseEntity.status(statusOfHttp)
                 .body(ResponseBuilder.builder().status(statusOfHttp).responseType(ResponseType.SUCCESS).build());
