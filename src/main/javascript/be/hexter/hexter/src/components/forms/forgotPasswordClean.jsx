@@ -1,6 +1,10 @@
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import { goBack } from "redux-first-routing";
+import * as Yup from "yup";
 
 const validationSchema = Yup.object({
   email: Yup.string().email().required("Email is required."),
@@ -14,7 +18,11 @@ const mapStateToProps = ({ state }) => ({
   forgotValues: state.form.forgot,
 });
 
-function ForgotPassword({ forgotValues }) {
+const mapDispatchToProps = (dispatch) => ({
+  goBack: (path) => dispatch(goBack(path)),
+});
+
+function ForgotPassword({ forgotValues, goBack }) {
   const [initialValues] = useState({
     email: forgotValues.email,
     recoveryToken: forgotValues.recoveryToken,
@@ -28,8 +36,19 @@ function ForgotPassword({ forgotValues }) {
     validationSchema,
     initialValues,
     initialErrors,
+    onSubmit: async () => {},
   });
-  return null;
+  return (
+    <Form>
+      <Form.Group className="mb-3" controlId="formEmail">
+        <Button className="go-back" onClick={goBack}>
+          go back
+        </Button>
+        <Form.Label>Forgot your password?</Form.Label>
+        <Form.Control></Form.Control>
+      </Form.Group>
+    </Form>
+  );
 }
 
 export default connect(mapStateToProps)(ForgotPassword);
