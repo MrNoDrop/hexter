@@ -2,7 +2,13 @@
   "state": {
     "fingerprint": null,
     "form": {
-      "forgot": { "email": "", "errors": {} },
+      "forgot": {
+        "email": "",
+        "recoveryToken": "",
+        "password": "",
+        "repassword": "",
+        "errors": {}
+      },
       "login": { "email": "", "password": "", "errors": {} },
       "register": {
         "firstname": "",
