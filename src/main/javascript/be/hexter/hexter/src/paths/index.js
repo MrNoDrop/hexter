@@ -5,7 +5,7 @@ import LandingPage from "./path/landingPage";
 import LoginPage from "./path/loginPage";
 import RegisterPage from "./path/registerPage";
 import Redirect from "../components/redirect";
-import ForgotPasswordPage from "../components/forms/forgotPassword";
+import ForgotPasswordPage from "../paths/path/forgotPasswordPage";
 
 const mapStateToProps = ({ state }) => ({
   authenticationToken: state.cookie["authentication-token"],
