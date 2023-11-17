@@ -30,6 +30,9 @@ function parseErrors(errors) {
 const validationSchema = Yup.object({
   email: Yup.string().email().required("Email is required."),
   password: Yup.string().strongPassword().required("Password is required."),
+  repassword: Yup.string()
+    .required("Retyping password is required.")
+    .oneOf([Yup.ref("password"), null], "Passwords don't match!"),
 });
 
 const mapStateToProps = ({ state }) => ({
@@ -226,7 +229,36 @@ function ForgotPassword({
                 {formik.errors.password}
               </div>
               <Form.Label>match new password:</Form.Label>
-              <Form.Control placeholder="retype password" />
+              <Form.Control
+                disabled={formik.isSubmitting}
+                name="repassword"
+                type="password"
+                placeholder="Retype Password"
+                onChange={(event) => {
+                  updateForgotFormValues(currentState, {
+                    email: forgotValues.email,
+                    password: forgotValues.password,
+                    repassword: event.target.value,
+                    errors: forgotValues.errors,
+                  });
+                  formik.handleChange(event);
+                }}
+                onBlur={formik.handleBlur}
+                value={formik.values.repassword}
+                isValid={
+                  !formik.errors.repassword && formik.values.repassword !== ""
+                }
+                isInvalid={
+                  formik.touched.repassword && formik.errors.repassword
+                }
+                feedback={formik.errors.repassword}
+              />
+              <div
+                visible={formik.errors.repassword ? true : false}
+                className="feedback-invalid"
+              >
+                {formik.errors.repassword}
+              </div>
               <Button
                 style={{
                   marginLeft: ".1vmin",
