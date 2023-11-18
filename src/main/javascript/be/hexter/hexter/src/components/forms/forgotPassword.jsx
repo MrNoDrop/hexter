@@ -132,7 +132,42 @@ function ForgotPassword({
     validationSchema: recoveryValidationSchema,
     initialValues: recoveryInitialValues,
     initialErrors: recoveryInitialErrors,
-    onSubmit: () => alert("hello"),
+    onSubmit: async (
+      { recoveryToken, repassword },
+      { setSubmitting, setErrors }
+    ) => {
+      try {
+        const result = await fetch("/api/user/recover-password", {
+          headers: {
+            "CSRF-TOKEN": csrfToken,
+            "Content-Type": "Application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            "recovery-token": recoveryToken,
+            password: repassword,
+          }),
+        });
+        const { status, responseType, errors, body } = await result.json();
+        if (responseType === "ERROR") {
+          switch (httpStatus[status]) {
+            default:
+              break;
+            case httpStatus.NOT_FOUND:
+            case httpStatus.CONFLICT:
+              setErrors({ ...formik.errors, ...parseErrors(errors) });
+              break;
+          }
+        }
+        if (responseType === "SUCCESS") {
+          // continue here
+        }
+        console.log(responseType);
+      } catch (e) {
+      } finally {
+        setSubmitting(false);
+      }
+    },
   });
   return (
     <>

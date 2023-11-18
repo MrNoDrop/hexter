@@ -131,14 +131,15 @@ public class UserController {
         } catch (MessagingException e) {
             log.error(e.getMessage());
         }
-        System.out.println(userService.findByRecoveryToken(resetPasswordToken));
         return ResponseEntity.status(statusOfHttp)
                 .body(ResponseBuilder.builder().status(statusOfHttp).responseType(ResponseType.SUCCESS).build());
     }
 
     @PostMapping(value = "/recover-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Object> recoverPassword(
-            @RequestParam("recovery-token") String recoveryToken, @RequestParam("password") String password) {
+            @RequestParam("recovery-token") String recoveryToken,
+            @RequestParam("password") String password) {
+        System.out.println(recoveryToken + ", " + password);
         final CredentialRecovery credentialRecovery = recoveryService.findByRecoveryToken(recoveryToken);
         System.out.println(credentialRecovery.getTimestamp().toLocalTime().toNanoOfDay()
                 - LocalDateTime.now().toLocalTime().toNanoOfDay());
