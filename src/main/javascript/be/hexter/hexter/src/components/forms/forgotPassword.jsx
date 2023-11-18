@@ -118,7 +118,7 @@ function ForgotPassword({
               break;
           }
         }
-        if (responseType == "SUCCESS") {
+        if (responseType === "SUCCESS") {
           setSuccessfullySubmitted(true);
         }
         console.log(responseType);
@@ -153,7 +153,7 @@ function ForgotPassword({
                 recoveryToken: forgotValues.recoveryToken,
                 password: forgotValues.password,
                 repassword: forgotValues.repassword,
-                errors: forgotValues.errors1,
+                errors1: forgotValues.errors1,
               });
               formik.handleChange(event);
             }}
@@ -222,7 +222,7 @@ function ForgotPassword({
                     recoveryToken: event.target.value,
                     password: forgotValues.password,
                     repassword: forgotValues.repassword,
-                    errors: forgotValues.errors2,
+                    errors2: forgotValues.errors2,
                   });
                   recoveryFormik.handleChange(event);
                 }
@@ -234,7 +234,7 @@ function ForgotPassword({
             <Form.Control
               disabled={
                 recoveryFormik.isSubmitting ||
-                recoveryFormik.values.recoveryToken.length != 8
+                recoveryFormik.values.recoveryToken.length !== 8
               }
               name="password"
               type="password"
@@ -245,7 +245,7 @@ function ForgotPassword({
                   recoveryToken: forgotValues.recoveryToken,
                   password: event.target.value,
                   repassword: forgotValues.repassword,
-                  errors: forgotValues.errors2,
+                  errors2: forgotValues.errors2,
                 });
                 recoveryFormik.handleChange(event);
               }}
@@ -271,7 +271,7 @@ function ForgotPassword({
             <Form.Control
               disabled={
                 recoveryFormik.isSubmitting ||
-                recoveryFormik.values.recoveryToken.length != 8
+                recoveryFormik.values.recoveryToken.length !== 8
               }
               name="repassword"
               type="password"
@@ -282,7 +282,7 @@ function ForgotPassword({
                   recoveryToken: forgotValues.recoveryToken,
                   password: forgotValues.password,
                   repassword: event.target.value,
-                  errors: forgotValues.errors2,
+                  errors2: forgotValues.errors2,
                 });
                 recoveryFormik.handleChange(event);
               }}
@@ -302,11 +302,12 @@ function ForgotPassword({
               {recoveryFormik.errors.repassword}
             </div>
             <Button
+              onSubmit={recoveryFormik.handleSubmit}
               variant="primary"
               type="submit"
               disabled={
-                recoveryFormik.values.recoveryToken.length != 8 ||
-                recoveryFormik.values.password !=
+                recoveryFormik.values.recoveryToken.length !== 8 ||
+                recoveryFormik.values.password !==
                   recoveryFormik.values.repassword
               }
               style={{
