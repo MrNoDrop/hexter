@@ -4,7 +4,7 @@ import httpStatus from "http-status";
 import { connect } from "react-redux";
 import Form from "react-bootstrap/Form";
 import { useFormik } from "formik";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import updateForgotFormValues from "../../store/actions/form/forgot";
 import { goBack } from "redux-first-routing";
@@ -29,6 +29,12 @@ function parseErrors(errors) {
 
 const validationSchema = Yup.object({
   email: Yup.string().email().required("Email is required."),
+});
+const recoveryValidationSchema = Yup.object({
+  password: Yup.string().strongPassword().required("Password is required."),
+  repassword: Yup.string()
+    .required("Retyping password is required.")
+    .oneOf([Yup.ref("password"), null], "Passwords don't match!"),
 });
 
 const mapStateToProps = ({ state }) => ({
@@ -70,13 +76,20 @@ function ForgotPassword({
   forgotValues,
   updateForgotFormValues,
 }) {
-  const [recoveryToken, setRecoveryToken] = useState(undefined);
   const navigateTo = useNavigate();
   const [initialValues] = useState({
     email: forgotValues.email,
   });
+  const [recoveryInitialValues] = useState({
+    recoveryToken: forgotValues.recoveryToken,
+    password: forgotValues.password,
+    repassword: forgotValues.repassword,
+  });
   const [succesfullySubmitted, setSuccessfullySubmitted] = useState(false);
-  const [initialErrors] = useState(forgotValues.errors);
+
+  const [initialErrors] = useState(forgotValues.errors1);
+  const [recoveryInitialErrors] = useState(forgotValues.errors2);
+
   const formik = useFormik({
     validationSchema,
     initialValues,
@@ -105,7 +118,7 @@ function ForgotPassword({
               break;
           }
         }
-        if (responseType === "SUCCESS") {
+        if (responseType == "SUCCESS") {
           setSuccessfullySubmitted(true);
         }
         console.log(responseType);
@@ -114,6 +127,12 @@ function ForgotPassword({
         setSubmitting(false);
       }
     },
+  });
+  const recoveryFormik = useFormik({
+    validationSchema: recoveryValidationSchema,
+    initialValues: recoveryInitialValues,
+    initialErrors: recoveryInitialErrors,
+    onSubmit: () => alert("hello"),
   });
   return (
     <>
@@ -131,7 +150,10 @@ function ForgotPassword({
             onChange={(event) => {
               updateForgotFormValues(currentState, {
                 email: event.target.value,
-                errors: forgotValues.errors,
+                recoveryToken: forgotValues.recoveryToken,
+                password: forgotValues.password,
+                repassword: forgotValues.repassword,
+                errors: forgotValues.errors1,
               });
               formik.handleChange(event);
             }}
@@ -183,30 +205,115 @@ function ForgotPassword({
         </Button>
       </Form>
       {succesfullySubmitted && (
-        <Form className="password-recovery-form-part2">
+        <Form
+          className="password-recovery-form-part2"
+          onSubmit={recoveryFormik.handleSubmit}
+        >
           <Form.Group className="mb-3" controlId="formRecovery">
             <Form.Label>Recover your account.</Form.Label>
             <Form.Control
               placeholder="recovery token here"
-              value={recoveryToken}
               style={{ textAlign: "center" }}
+              name="recoveryToken"
               onChange={(event) => {
-                //continue from here.
+                if (event.target.value.length <= 8) {
+                  updateForgotFormValues(currentState, {
+                    email: forgotValues.email,
+                    recoveryToken: event.target.value,
+                    password: forgotValues.password,
+                    repassword: forgotValues.repassword,
+                    errors: forgotValues.errors2,
+                  });
+                  recoveryFormik.handleChange(event);
+                }
               }}
+              onBlur={recoveryFormik.handleBlur}
+              value={recoveryFormik.values.recoveryToken}
             />
             <Form.Label>new password:</Form.Label>
-            <Form.Control placeholder="password" />
+            <Form.Control
+              disabled={
+                recoveryFormik.isSubmitting ||
+                recoveryFormik.values.recoveryToken.length != 8
+              }
+              name="password"
+              type="password"
+              placeholder="Password"
+              onChange={(event) => {
+                updateForgotFormValues(currentState, {
+                  email: forgotValues.email,
+                  recoveryToken: forgotValues.recoveryToken,
+                  password: event.target.value,
+                  repassword: forgotValues.repassword,
+                  errors: forgotValues.errors2,
+                });
+                recoveryFormik.handleChange(event);
+              }}
+              onBlur={recoveryFormik.handleBlur}
+              value={recoveryFormik.values.password}
+              isValid={
+                !recoveryFormik.errors.password &&
+                recoveryFormik.values.password !== ""
+              }
+              isInvalid={
+                recoveryFormik.touched.password &&
+                recoveryFormik.errors.password
+              }
+              feedback={recoveryFormik.errors.password}
+            />
+            <div
+              visible={recoveryFormik.errors.password ? true : false}
+              className="feedback-invalid"
+            >
+              {recoveryFormik.errors.password}
+            </div>
             <Form.Label>match new password:</Form.Label>
-            <Form.Control placeholder="retype password" />
+            <Form.Control
+              disabled={
+                recoveryFormik.isSubmitting ||
+                recoveryFormik.values.recoveryToken.length != 8
+              }
+              name="repassword"
+              type="password"
+              placeholder="Retype Password"
+              onChange={(event) => {
+                updateForgotFormValues(currentState, {
+                  email: forgotValues.email,
+                  recoveryToken: forgotValues.recoveryToken,
+                  password: forgotValues.password,
+                  repassword: event.target.value,
+                  errors: forgotValues.errors2,
+                });
+                recoveryFormik.handleChange(event);
+              }}
+              onBlur={recoveryFormik.handleBlur}
+              value={recoveryFormik.values.repassword}
+              isValid={
+                !recoveryFormik.errors.repassword &&
+                recoveryFormik.values.repassword !== ""
+              }
+              isInvalid={
+                recoveryFormik.touched.repassword &&
+                recoveryFormik.errors.repassword
+              }
+              feedback={recoveryFormik.errors.repassword}
+            />
+            <div className="feedback-invalid">
+              {recoveryFormik.errors.repassword}
+            </div>
             <Button
+              variant="primary"
+              type="submit"
+              disabled={
+                recoveryFormik.values.recoveryToken.length != 8 ||
+                recoveryFormik.values.password !=
+                  recoveryFormik.values.repassword
+              }
               style={{
                 marginLeft: ".1vmin",
-                marginTop: "0.3vmin",
+                marginTop: "0.9vmin",
+                marginBottom: "-5.5vmin",
                 width: "15vmin",
-              }}
-              onClick={(e) => {
-                changePath("/recover-password");
-                navigateTo("/recover-password");
               }}
             >
               Recover
