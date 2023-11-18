@@ -110,12 +110,12 @@ public class UserController {
     }
 
     @PostMapping(value = "/request-recover-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<Object> requestRecoverPassword(@RequestBody @Valid String email) {
+    public @ResponseBody ResponseEntity<Object> requestRecoverPassword(@RequestBody @Valid String json) {
         User user;
         HttpStatus statusOfHttp;
-        final String unwrappedEmail = email.substring(10, email.length() - 2);
+        final String email = new JSONObject(json).getString("email");
         try {
-            user = userService.findUserByEmail(unwrappedEmail);
+            user = userService.findUserByEmail(email);
             statusOfHttp = HttpStatus.FOUND;
         } catch (EmailUnregisteredException ex) {
             statusOfHttp = HttpStatus.NOT_FOUND;
@@ -125,7 +125,7 @@ public class UserController {
         final String resetPasswordToken = RandomHash.generateRandomString(8).toUpperCase();
         try {
             GMailSender.authenticate("patryk.sitko.algemeen@gmail.com", "bbfc vvue oxdf qfwk").send(
-                    List.of(unwrappedEmail), "Hexter password reset",
+                    List.of(email), "Hexter password reset",
                     "Your reset token is: " + resetPasswordToken + ".");
             userService.storeCredentialRecoveryToken(user, resetPasswordToken);
         } catch (MessagingException e) {
@@ -137,12 +137,14 @@ public class UserController {
 
     @PostMapping(value = "/recover-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Object> recoverPassword(
-            @RequestParam("recovery-token") String recoveryToken,
-            @RequestParam("password") String password) {
-        System.out.println(recoveryToken + ", " + password);
-        final CredentialRecovery credentialRecovery = recoveryService.findByRecoveryToken(recoveryToken);
-        System.out.println(credentialRecovery.getTimestamp().toLocalTime().toNanoOfDay()
-                - LocalDateTime.now().toLocalTime().toNanoOfDay());
+            @RequestBody @Valid String json) {
+        final JSONObject params = new JSONObject(json);
+
+        System.out.println(params.getString("recovery-token") + ", " + params.getString("password"));
+        // final CredentialRecovery credentialRecovery =
+        // recoveryService.findByRecoveryToken(recoveryToken);
+        // System.out.println(credentialRecovery.getTimestamp().toLocalTime().toNanoOfDay()
+        // - LocalDateTime.now().toLocalTime().toNanoOfDay());
         // final User user = userService.findByRecoveryToken(recoveryToken);
         // final Credential credential = user.getCredential();
         return null;
