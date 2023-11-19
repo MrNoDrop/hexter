@@ -86,6 +86,8 @@ function ForgotPassword({
     repassword: forgotValues.repassword,
   });
   const [succesfullySubmitted, setSuccessfullySubmitted] = useState(false);
+  const [recoverySuccesfullySubmitted, setRecoverySuccessfullySubmitted] =
+    useState(false);
 
   const [initialErrors] = useState(forgotValues.errors1);
   const [recoveryInitialErrors] = useState(forgotValues.errors2);
@@ -160,9 +162,8 @@ function ForgotPassword({
           }
         }
         if (responseType === "SUCCESS") {
-          // continue here
+          setRecoverySuccessfullySubmitted(true);
         }
-        console.log(responseType);
       } catch (e) {
       } finally {
         setSubmitting(false);
@@ -343,7 +344,8 @@ function ForgotPassword({
               disabled={
                 recoveryFormik.values.recoveryToken.length !== 8 ||
                 recoveryFormik.values.password !==
-                  recoveryFormik.values.repassword
+                  recoveryFormik.values.repassword ||
+                recoverySuccesfullySubmitted
               }
               style={{
                 marginLeft: ".1vmin",
@@ -352,7 +354,11 @@ function ForgotPassword({
                 width: "15vmin",
               }}
             >
-              Recover
+              {recoveryFormik.isSubmitting
+                ? "Recovering"
+                : recoverySuccesfullySubmitted
+                ? "Recovered"
+                : "Recover"}
             </Button>
           </Form.Group>
         </Form>

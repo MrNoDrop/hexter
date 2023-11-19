@@ -38,6 +38,7 @@ import be.hexter.hexter.service.RecoveryService;
 import be.hexter.hexter.service.exception.EmailRegisteredException;
 import be.hexter.hexter.service.exception.EmailUnregisteredException;
 import be.hexter.hexter.service.exception.PasswordMismatchException;
+import be.hexter.hexter.service.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -141,11 +142,15 @@ public class UserController {
         final JSONObject params = new JSONObject(json);
         final String recoveryToken = params.getString("recovery-token");
         final String password = params.getString("password");
-        userService.changePassword(recoveryToken, password);
-        // System.out.println(credentialRecovery.getTimestamp().toLocalTime().toNanoOfDay()
-        // - LocalDateTime.now().toLocalTime().toNanoOfDay());
-        // final User user = userService.findByRecoveryToken(recoveryToken);
-        // final Credential credential = user.getCredential();
-        return null;
+        try {
+            userService.changePassword(recoveryToken, password);
+        } catch (UserNotFoundException ex) {
+            log.error(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ResponseBuilder.builder().status(HttpStatus.NOT_FOUND).errors(List.of(ex.getMessage()))
+                            .responseType(ResponseType.ERROR).build());
+        }
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .body(ResponseBuilder.builder().status(HttpStatus.FOUND).responseType(ResponseType.SUCCESS).build());
     }
 }

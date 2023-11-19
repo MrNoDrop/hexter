@@ -151,13 +151,15 @@ public class UserServiceImplementation implements UserService {
     public void changePassword(String recoveryToken, String password) {
         try {
             final User user = this.findByRecoveryToken(recoveryToken);
-            Boolean safePassword = BCryptPasswordEncoder.isPasswordMeetingStandards(password);
-            if (safePassword) {
-                user.getCredential().setPassword(BCryptPasswordEncoder.getInstance.encode(password));
-            } else {
-                throw new UnsafePasswordException();
+            if (user instanceof User) {
+                Boolean safePassword = BCryptPasswordEncoder.isPasswordMeetingStandards(password);
+                if (safePassword) {
+                    user.getCredential().setPassword(BCryptPasswordEncoder.getInstance.encode(password));
+                } else {
+                    throw new UnsafePasswordException();
+                }
+                userRepository.save(user);
             }
-            userRepository.save(user);
         } catch (UserNotFoundException ex) {
             log.error(ex.getMessage());
         }
