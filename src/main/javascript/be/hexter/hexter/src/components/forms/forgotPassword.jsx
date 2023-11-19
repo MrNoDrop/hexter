@@ -265,12 +265,14 @@ function ForgotPassword({
               }}
               onBlur={recoveryFormik.handleBlur}
               value={recoveryFormik.values.recoveryToken}
+              disabled={recoverySuccesfullySubmitted}
             />
             <Form.Label>new password:</Form.Label>
             <Form.Control
               disabled={
                 recoveryFormik.isSubmitting ||
-                recoveryFormik.values.recoveryToken.length !== 8
+                recoveryFormik.values.recoveryToken.length !== 8 ||
+                recoverySuccesfullySubmitted
               }
               name="password"
               type="password"
@@ -307,7 +309,8 @@ function ForgotPassword({
             <Form.Control
               disabled={
                 recoveryFormik.isSubmitting ||
-                recoveryFormik.values.recoveryToken.length !== 8
+                recoveryFormik.values.recoveryToken.length !== 8 ||
+                recoverySuccesfullySubmitted
               }
               name="repassword"
               type="password"

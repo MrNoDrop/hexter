@@ -159,7 +159,8 @@ public class UserServiceImplementation implements UserService {
                     throw new UnsafePasswordException();
                 }
                 userRepository.save(user);
-            }
+            } else
+                throw new UserNotFoundException();
         } catch (UserNotFoundException ex) {
             log.error(ex.getMessage());
         }

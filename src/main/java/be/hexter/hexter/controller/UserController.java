@@ -144,7 +144,14 @@ public class UserController {
         final String password = params.getString("password");
         try {
             userService.changePassword(recoveryToken, password);
-            recoveryService.deleteRecoveryToken(recoveryToken);
+
+            Thread thread = new Thread(() -> {
+                for (CredentialRecovery cr : recoveryService
+                        .findByCredential(userService.findByRecoveryToken(recoveryToken).getCredential())) {
+                    recoveryService.deleteRecoveryToken(cr.getRecoveryToken());
+                }
+            });
+            thread.start();
         } catch (UserNotFoundException ex) {
             log.error(ex.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
