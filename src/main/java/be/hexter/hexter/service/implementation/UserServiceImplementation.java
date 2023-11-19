@@ -26,7 +26,9 @@ import be.hexter.hexter.service.exception.PasswordMismatchException;
 import be.hexter.hexter.service.exception.UnsafePasswordException;
 import be.hexter.hexter.service.exception.UserNotFoundException;
 import be.hexter.hexter.service.exception.UsergroupNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class UserServiceImplementation implements UserService {
 
@@ -157,7 +159,7 @@ public class UserServiceImplementation implements UserService {
             }
             userRepository.save(user);
         } catch (UserNotFoundException ex) {
-
+            log.error(ex.getMessage());
         }
     }
 }
