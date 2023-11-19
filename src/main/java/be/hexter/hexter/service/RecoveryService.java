@@ -10,4 +10,6 @@ public interface RecoveryService {
     CredentialRecovery findByRecoveryToken(String token);
 
     List<CredentialRecovery> findByCredential(Credential credential);
+
+    void deleteRecoveryToken(String token);
 }

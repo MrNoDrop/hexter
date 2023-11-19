@@ -59,10 +59,6 @@ public class CredentialRecovery implements Serializable, Cloneable {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @JsonProperty("used")
-    @Column(name = "used", unique = false)
-    public Boolean used;
-
     @JsonProperty("recovery-token")
     @Column(name = "recovery_token", unique = false)
     public String recoveryToken;

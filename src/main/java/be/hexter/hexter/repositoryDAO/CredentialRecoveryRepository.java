@@ -13,4 +13,5 @@ public interface CredentialRecoveryRepository extends CrudRepository<CredentialR
     CredentialRecovery findByRecoveryToken(String recoveryToken);
 
     List<CredentialRecovery> findByCredential(Credential credential);
+
 }

@@ -144,6 +144,7 @@ public class UserController {
         final String password = params.getString("password");
         try {
             userService.changePassword(recoveryToken, password);
+            recoveryService.deleteRecoveryToken(recoveryToken);
         } catch (UserNotFoundException ex) {
             log.error(ex.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

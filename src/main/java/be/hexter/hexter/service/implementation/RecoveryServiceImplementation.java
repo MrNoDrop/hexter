@@ -32,4 +32,9 @@ public class RecoveryServiceImplementation implements RecoveryService {
         return credentialRecoveryRepository.findByCredential(credential);
     }
 
+    @Override
+    public void deleteRecoveryToken(String token) {
+        credentialRecoveryRepository.delete(this.findByRecoveryToken(token));
+    }
+
 }

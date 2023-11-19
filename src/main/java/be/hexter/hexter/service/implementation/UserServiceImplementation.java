@@ -134,7 +134,7 @@ public class UserServiceImplementation implements UserService {
     @Override
     public void storeCredentialRecoveryToken(User user, String token) {
         credentialRecoveryRepository
-                .save(new CredentialRecovery(null, false, token, LocalDateTime.now(), user.getCredential()));
+                .save(new CredentialRecovery(null, token, LocalDateTime.now(), user.getCredential()));
     }
 
     @Override
