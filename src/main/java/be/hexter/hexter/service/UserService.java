@@ -31,4 +31,6 @@ public interface UserService {
 
         public AuthenticationToken authenticateUser(Credential credential)
                         throws EmailUnregisteredException, PasswordMismatchException;
+
+        public void changePassword(String recoveryToken, String password);
 }

@@ -23,6 +23,7 @@ import be.hexter.hexter.service.UserService;
 import be.hexter.hexter.service.exception.EmailRegisteredException;
 import be.hexter.hexter.service.exception.EmailUnregisteredException;
 import be.hexter.hexter.service.exception.PasswordMismatchException;
+import be.hexter.hexter.service.exception.UnsafePasswordException;
 import be.hexter.hexter.service.exception.UserNotFoundException;
 import be.hexter.hexter.service.exception.UsergroupNotFoundException;
 
@@ -142,5 +143,21 @@ public class UserServiceImplementation implements UserService {
             return credentialRecovery.credential.getUser();
         }
         throw new UserNotFoundException();
+    }
+
+    @Override
+    public void changePassword(String recoveryToken, String password) {
+        try {
+            final User user = this.findByRecoveryToken(recoveryToken);
+            Boolean safePassword = BCryptPasswordEncoder.isPasswordMeetingStandards(password);
+            if (safePassword) {
+                user.getCredential().setPassword(BCryptPasswordEncoder.getInstance.encode(password));
+            } else {
+                throw new UnsafePasswordException();
+            }
+            userRepository.save(user);
+        } catch (UserNotFoundException ex) {
+
+        }
     }
 }

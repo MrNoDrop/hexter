@@ -139,10 +139,9 @@ public class UserController {
     public @ResponseBody ResponseEntity<Object> recoverPassword(
             @RequestBody @Valid String json) {
         final JSONObject params = new JSONObject(json);
-
-        System.out.println(params.getString("recovery-token") + ", " + params.getString("password"));
-        // final CredentialRecovery credentialRecovery =
-        // recoveryService.findByRecoveryToken(recoveryToken);
+        final String recoveryToken = params.getString("recovery-token");
+        final String password = params.getString("password");
+        userService.changePassword(recoveryToken, password);
         // System.out.println(credentialRecovery.getTimestamp().toLocalTime().toNanoOfDay()
         // - LocalDateTime.now().toLocalTime().toNanoOfDay());
         // final User user = userService.findByRecoveryToken(recoveryToken);
