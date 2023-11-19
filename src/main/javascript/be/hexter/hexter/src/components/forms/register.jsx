@@ -78,6 +78,7 @@ function LoginForm({
             return registerValues.errors;
           })())()
   );
+  const [registered, setRegistered] = useState(false);
   const formik = useFormik({
     validationSchema,
     initialValues,
@@ -130,6 +131,9 @@ function LoginForm({
               undirtyFormAllowed: responseType === "ERROR",
             });
           }
+        }
+        if (httpStatus[status] === httpStatus.CREATED) {
+          setRegistered(true);
         }
       } catch (e) {
       } finally {
@@ -323,10 +327,17 @@ function LoginForm({
             !(
               formik.isValid &&
               (formik.dirty || registerValues.undirtyFormAllowed)
-            ) || formik.isSubmitting
+            ) ||
+            formik.isSubmitting ||
+            registered
           }
         >
-          Register
+          {(registered && "Registered") ||
+          formik.errors.email === "This email is already registered."
+            ? "Registered"
+            : formik.isSubmitting
+            ? "Registering"
+            : "Register"}
         </Button>
       </Form>
     </div>
