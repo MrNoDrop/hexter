@@ -1134,3 +1134,7 @@ sudo systemctl restart hexter
 **Java Version:** 17+
 **Node Version:** 20+
 **MySQL Version:** 8.0+
+
+# mvn clean package -Dmaven.test.skip=true
+
+# ./mvnw spring-boot:run -Dmaven.test.skip=true -Pprod
