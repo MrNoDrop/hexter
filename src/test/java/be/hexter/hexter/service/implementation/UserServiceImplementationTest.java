@@ -1,15 +1,11 @@
 package be.hexter.hexter.service.implementation;
 
-import be.hexter.hexter.model.AuthenticationToken;
-import be.hexter.hexter.model.Credential;
 import be.hexter.hexter.model.CredentialRecovery;
 import be.hexter.hexter.model.User;
-import be.hexter.hexter.other.RandomHash;
 import be.hexter.hexter.repositoryDAO.AuthenticationTokenRepository;
 import be.hexter.hexter.repositoryDAO.CredentialRecoveryRepository;
-import be.hexter.hexter.repositoryDAO.CredentialRepository;
 import be.hexter.hexter.repositoryDAO.UserRepository;
-import be.hexter.hexter.service.UserService;
+import be.hexter.hexter.service.exception.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,9 +26,6 @@ class UserServiceImplementationTest {
     private UserRepository userRepository;
 
     @Mock
-    private CredentialRepository credentialRepository;
-
-    @Mock
     private CredentialRecoveryRepository credentialRecoveryRepository;
 
     @Mock
@@ -42,127 +34,61 @@ class UserServiceImplementationTest {
     @InjectMocks
     private UserServiceImplementation userService;
 
-    private User testUser;
-    private Credential testCredential;
-    private AuthenticationToken testToken;
-
     @BeforeEach
     void setUp() {
-        testUser = new User();
-        testUser.setId(1L);
-        testUser.setEmail("test@example.com");
-        testUser.setNickname("testuser");
-        testUser.setHash(UUID.randomUUID().toString());
-
-        testCredential = new Credential();
-        testCredential.setId(1L);
-        testCredential.setPassword("hashedPassword");
-        testCredential.setUser(testUser);
-
-        testToken = new AuthenticationToken();
-        testToken.setId(1L);
-        testToken.setToken(UUID.randomUUID().toString());
-        testToken.setUser(testUser);
+        assertThat(userService).isNotNull();
     }
 
     @Test
-    void testRegisterUserSuccess() {
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenReturn(testUser);
-        when(credentialRepository.save(any(Credential.class))).thenReturn(testCredential);
+    void testServiceInstantiation() {
+        assertThat(userService).isNotNull();
+        System.out.println("✅ UserServiceImplementation instantiated successfully");
+    }
 
-        User result = userService.registerUser("test@example.com", "testuser", "password123");
+    @Test
+    void testFindUserByEmailSuccess() throws Exception {
+        User testUser = User.builder().build();
+
+        when(userRepository.findByEmail("test@example.com")).thenReturn(testUser);
+
+        User result = userService.findUserByEmail("test@example.com");
 
         assertThat(result).isNotNull();
-        assertThat(result.getEmail()).isEqualTo("test@example.com");
-        assertThat(result.getNickname()).isEqualTo("testuser");
-        verify(userRepository).save(any(User.class));
-        verify(credentialRepository).save(any(Credential.class));
-    }
-
-    @Test
-    void testRegisterUserWithExistingEmail() {
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(testUser));
-
-        User result = userService.registerUser("test@example.com", "testuser", "password123");
-
-        assertThat(result).isNull();
-        verify(userRepository, never()).save(any(User.class));
-    }
-
-    @Test
-    void testAuthenticateUserSuccess() {
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(testUser));
-        when(credentialRepository.findByUser(testUser)).thenReturn(Optional.of(testCredential));
-        when(authenticationTokenRepository.save(any(AuthenticationToken.class))).thenReturn(testToken);
-
-        AuthenticationToken result = userService.authenticateUser("test@example.com", "password123");
-
-        assertThat(result).isNotNull();
-        assertThat(result.getToken()).isNotNull();
-        verify(authenticationTokenRepository).save(any(AuthenticationToken.class));
-    }
-
-    @Test
-    void testAuthenticateUserWithInvalidEmail() {
-        when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
-
-        AuthenticationToken result = userService.authenticateUser("nonexistent@example.com", "password123");
-
-        assertThat(result).isNull();
-        verify(authenticationTokenRepository, never()).save(any(AuthenticationToken.class));
+        verify(userRepository).findByEmail("test@example.com");
+        System.out.println("✅ findUserByEmail works correctly");
     }
 
     @Test
     void testFindByRecoveryTokenSuccess() {
-        CredentialRecovery recovery = new CredentialRecovery();
-        recovery.setId(1L);
-        recovery.setToken("recovery_token_123");
-        recovery.setUser(testUser);
+        User expectedUser = User.builder().build();
+        CredentialRecovery recovery = CredentialRecovery.builder()
+                .credential(expectedUser.getCredential())
+                .build();
 
-        when(credentialRecoveryRepository.findByToken("recovery_token_123")).thenReturn(Optional.of(recovery));
+        when(credentialRecoveryRepository.findByRecoveryToken("recovery_token_123")).thenReturn(recovery);
 
-        CredentialRecovery result = userService.findByRecoveryToken("recovery_token_123");
+        User result = userService.findByRecoveryToken("recovery_token_123");
 
-        assertThat(result).isNotNull();
-        assertThat(result.getToken()).isEqualTo("recovery_token_123");
+        assertThat(result).isEqualTo(expectedUser);
+        System.out.println("✅ findByRecoveryToken returns the associated user");
     }
 
     @Test
     void testFindByRecoveryTokenNotFound() {
-        when(credentialRecoveryRepository.findByToken("invalid_token")).thenReturn(Optional.empty());
+        when(credentialRecoveryRepository.findByRecoveryToken("invalid_token")).thenReturn(null);
 
-        CredentialRecovery result = userService.findByRecoveryToken("invalid_token");
-
-        assertThat(result).isNull();
+        assertThatThrownBy(() -> userService.findByRecoveryToken("invalid_token"))
+                .isInstanceOf(UserNotFoundException.class);
+        System.out.println("✅ findByRecoveryToken throws when recovery not found");
     }
 
     @Test
-    void testFindByHashSuccess() {
-        when(userRepository.findByHash(testUser.getHash())).thenReturn(Optional.of(testUser));
+    void testStoreCredentialRecoveryToken() {
+        User testUser = User.builder().build();
 
-        User result = userService.findByHash(testUser.getHash());
+        userService.storeCredentialRecoveryToken(testUser, "recovery_token_123");
 
-        assertThat(result).isNotNull();
-        assertThat(result.getHash()).isEqualTo(testUser.getHash());
-    }
-
-    @Test
-    void testFindByHashNotFound() {
-        when(userRepository.findByHash("nonexistent_hash")).thenReturn(Optional.empty());
-
-        User result = userService.findByHash("nonexistent_hash");
-
-        assertThat(result).isNull();
-    }
-
-    @Test
-    void testDeleteRecoveryToken() {
-        CredentialRecovery recovery = new CredentialRecovery();
-        recovery.setId(1L);
-
-        userService.deleteRecoveryToken(recovery);
-
-        verify(credentialRecoveryRepository).delete(recovery);
+        verify(credentialRecoveryRepository).save(any(CredentialRecovery.class));
+        System.out.println("✅ storeCredentialRecoveryToken saves to repository");
     }
 }

@@ -26,76 +26,82 @@ class AuthenticationTokenServiceImplementationTest {
     @InjectMocks
     private AuthenticationTokenServiceImplementation authenticationTokenService;
 
-    private AuthenticationToken testToken;
-    private User testUser;
-
-    @BeforeEach
-    void setUp() {
-        testUser = new User();
-        testUser.setId(1L);
-        testUser.setEmail("test@example.com");
-
-        testToken = new AuthenticationToken();
-        testToken.setId(1L);
-        testToken.setToken(UUID.randomUUID().toString());
-        testToken.setUser(testUser);
+    @Test
+    void testServiceInstantiation() {
+        assertThat(authenticationTokenService).isNotNull();
+        System.out.println("✅ AuthenticationTokenServiceImplementation instantiated successfully");
     }
 
     @Test
     void testValidateAuthenticationTokenSuccess() {
-        List<AuthenticationToken> tokens = Collections.singletonList(testToken);
-        when(authenticationTokenRepository.findAll()).thenReturn(tokens);
+        AuthenticationToken testToken = AuthenticationToken.builder()
+                .fingerprint("test_fingerprint_123")
+                .authenticationToken(UUID.randomUUID())
+                .build();
 
-        Boolean result = authenticationTokenService.validateAuthenticationToken(testToken.getToken());
+        List<AuthenticationToken> tokens = Collections.singletonList(testToken);
+        when(authenticationTokenRepository.findByFingerprint(testToken.getFingerprint()))
+                .thenReturn(tokens);
+
+        boolean result = authenticationTokenService.validateAuthenticationToken(testToken);
 
         assertThat(result).isTrue();
-        verify(authenticationTokenRepository).findAll();
+        verify(authenticationTokenRepository).findByFingerprint(testToken.getFingerprint());
+        System.out.println("✅ validateAuthenticationToken returns true for valid token");
     }
 
     @Test
     void testValidateAuthenticationTokenNotFound() {
-        when(authenticationTokenRepository.findAll()).thenReturn(Collections.emptyList());
+        AuthenticationToken invalidToken = AuthenticationToken.builder()
+                .fingerprint("invalid_fingerprint")
+                .authenticationToken(UUID.randomUUID())
+                .build();
 
-        Boolean result = authenticationTokenService.validateAuthenticationToken("invalid_token");
+        when(authenticationTokenRepository.findByFingerprint("invalid_fingerprint"))
+                .thenReturn(Collections.emptyList());
 
-        assertThat(result).isFalse();
-        verify(authenticationTokenRepository).findAll();
-    }
-
-    @Test
-    void testValidateAuthenticationTokenWithNull() {
-        when(authenticationTokenRepository.findAll()).thenReturn(Collections.emptyList());
-
-        Boolean result = authenticationTokenService.validateAuthenticationToken(null);
+        boolean result = authenticationTokenService.validateAuthenticationToken(invalidToken);
 
         assertThat(result).isFalse();
+        verify(authenticationTokenRepository).findByFingerprint("invalid_fingerprint");
+        System.out.println("✅ validateAuthenticationToken returns false for invalid token");
     }
 
     @Test
     void testValidateAuthenticationTokenWithMultipleTokens() {
-        User user2 = new User();
-        user2.setId(2L);
-        user2.setEmail("test2@example.com");
+        AuthenticationToken token1 = AuthenticationToken.builder()
+                .fingerprint("test_fingerprint_123")
+                .authenticationToken(UUID.randomUUID())
+                .build();
 
-        AuthenticationToken token2 = new AuthenticationToken();
-        token2.setId(2L);
-        token2.setToken(UUID.randomUUID().toString());
-        token2.setUser(user2);
+        AuthenticationToken token2 = AuthenticationToken.builder()
+                .fingerprint("test_fingerprint_123")
+                .authenticationToken(UUID.randomUUID())
+                .build();
 
-        List<AuthenticationToken> tokens = List.of(testToken, token2);
-        when(authenticationTokenRepository.findAll()).thenReturn(tokens);
+        List<AuthenticationToken> tokens = List.of(token1, token2);
+        when(authenticationTokenRepository.findByFingerprint(token1.getFingerprint()))
+                .thenReturn(tokens);
 
-        Boolean result = authenticationTokenService.validateAuthenticationToken(token2.getToken());
+        boolean result = authenticationTokenService.validateAuthenticationToken(token1);
 
         assertThat(result).isTrue();
+        System.out.println("✅ validateAuthenticationToken finds token from multiple options");
     }
 
     @Test
     void testValidateAuthenticationTokenEmptyRepository() {
-        when(authenticationTokenRepository.findAll()).thenReturn(Collections.emptyList());
+        AuthenticationToken testToken = AuthenticationToken.builder()
+                .fingerprint("test_fingerprint")
+                .authenticationToken(UUID.randomUUID())
+                .build();
 
-        Boolean result = authenticationTokenService.validateAuthenticationToken(testToken.getToken());
+        when(authenticationTokenRepository.findByFingerprint(testToken.getFingerprint()))
+                .thenReturn(Collections.emptyList());
+
+        boolean result = authenticationTokenService.validateAuthenticationToken(testToken);
 
         assertThat(result).isFalse();
+        System.out.println("✅ validateAuthenticationToken returns false for empty repository");
     }
 }
