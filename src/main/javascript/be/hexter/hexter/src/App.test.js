@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import App from "./App";
 
-test("renders landing page text", () => {
+test("renders login form when not authenticated", () => {
   render(<App />);
-  const linkElement = screen.getByText(/landing page/i);
-  expect(linkElement).toBeInTheDocument();
+  const loginButton = screen.getByRole("button", { name: /login/i });
+  expect(loginButton).toBeInTheDocument();
 });
