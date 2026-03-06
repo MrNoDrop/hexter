@@ -25,7 +25,7 @@ public class GMailSender {
     }
 
     public static GMailSender authenticate(String username, String password) {
-        if (mailSender == null || (mailSender.username != username || mailSender.password != password)) {
+        if (mailSender == null || !username.equals(mailSender.username) || !password.equals(mailSender.password)) {
             mailSender = new GMailSender(username, password);
         }
         return mailSender;

@@ -32,14 +32,18 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class UserServiceImplementation implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final CredentialRecoveryRepository credentialRecoveryRepository;
+    private final AuthenticationTokenRepository authenticationTokenRepository;
 
-    @Autowired
-    CredentialRecoveryRepository credentialRecoveryRepository;
-
-    @Autowired
-    private AuthenticationTokenRepository authenticationTokenRepository;
+    public UserServiceImplementation(
+            UserRepository userRepository,
+            CredentialRecoveryRepository credentialRecoveryRepository,
+            AuthenticationTokenRepository authenticationTokenRepository) {
+        this.userRepository = userRepository;
+        this.credentialRecoveryRepository = credentialRecoveryRepository;
+        this.authenticationTokenRepository = authenticationTokenRepository;
+    }
 
     @Override
     public User registerUser(User user) throws EmailRegisteredException, IllegalArgumentException {
@@ -68,7 +72,7 @@ public class UserServiceImplementation implements UserService {
     @Override
     public User findUserByEmail(String email) throws EmailUnregisteredException {
         final User user = userRepository.findByEmail(email);
-        if (user instanceof User) {
+        if (user != null) {
             return user;
         }
         throw new EmailUnregisteredException(email);
@@ -78,9 +82,6 @@ public class UserServiceImplementation implements UserService {
     public AuthenticationToken authenticateUser(Credential credential)
             throws EmailUnregisteredException, PasswordMismatchException {
         final User user = this.findUserByEmail(credential.getEmail());
-        if (!(user instanceof User)) {
-            throw new EmailUnregisteredException(credential.getEmail());
-        }
         final boolean passwordMatches = user.getCredential().isPasswordMatching(credential.getPassword());
         if (!passwordMatches) {
             throw new PasswordMismatchException(credential.getEmail());
@@ -96,9 +97,13 @@ public class UserServiceImplementation implements UserService {
             authenticationToken.setFingerprint("hidden.");
             return authenticationToken;
         }
-        AuthenticationToken registeredAuthenticationToken = authenticationTokenRepository.save(
-                AuthenticationToken.builder().id(null).credential(user.getCredential()).fingerprint(fingerprint)
-                        .authenticationToken(UUID.randomUUID()).build());
+        AuthenticationToken newToken = AuthenticationToken.builder()
+                .id(null)
+                .credential(user.getCredential())
+                .fingerprint(fingerprint)
+                .authenticationToken(UUID.randomUUID())
+                .build();
+        AuthenticationToken registeredAuthenticationToken = authenticationTokenRepository.save(newToken);
         registeredAuthenticationToken.setFingerprint("hidden.");
         return registeredAuthenticationToken;
     }
@@ -106,7 +111,7 @@ public class UserServiceImplementation implements UserService {
     @Override
     public User findUserByFirstname(String firstname) throws UsernameNotFoundException {
         final User user = userRepository.findUserByFirstname(firstname);
-        if (user instanceof User) {
+        if (user != null) {
             return user;
         }
         throw new UsernameNotFoundException(firstname);
@@ -115,7 +120,7 @@ public class UserServiceImplementation implements UserService {
     @Override
     public User findUserByLastname(String lastname) throws UsernameNotFoundException {
         final User user = userRepository.findUserByLastname(lastname);
-        if (user instanceof User) {
+        if (user != null) {
             return user;
         }
         throw new UsernameNotFoundException(lastname);
@@ -124,9 +129,9 @@ public class UserServiceImplementation implements UserService {
     @Override
     public List<User> findUsergroupByFirstnameAndLastname(String firstname, String lastname)
             throws UsergroupNotFoundException {
-        final List<User> user = userRepository.findUsergroupByFirstAndLastName(firstname, lastname);
-        if (user instanceof List<User>) {
-            return user;
+        final List<User> users = userRepository.findUsergroupByFirstAndLastName(firstname, lastname);
+        if (users != null && !users.isEmpty()) {
+            return users;
         }
         throw new UsergroupNotFoundException(firstname, lastname);
     }
@@ -140,29 +145,26 @@ public class UserServiceImplementation implements UserService {
     @Override
     public User findByRecoveryToken(String token) {
         final CredentialRecovery credentialRecovery = credentialRecoveryRepository.findByRecoveryToken(token);
-
-        if (credentialRecovery.credential.getUser() instanceof User) {
-            return credentialRecovery.credential.getUser();
+        if (credentialRecovery == null || credentialRecovery.credential == null 
+                || credentialRecovery.credential.getUser() == null) {
+            throw new UserNotFoundException();
         }
-        throw new UserNotFoundException();
+        return credentialRecovery.credential.getUser();
     }
 
     @Override
     public void changePassword(String recoveryToken, String password) {
         try {
             final User user = this.findByRecoveryToken(recoveryToken);
-            if (user instanceof User) {
-                Boolean safePassword = BCryptPasswordEncoder.isPasswordMeetingStandards(password);
-                if (safePassword) {
-                    user.getCredential().setPassword(BCryptPasswordEncoder.getInstance.encode(password));
-                } else {
-                    throw new UnsafePasswordException();
-                }
+            Boolean safePassword = BCryptPasswordEncoder.isPasswordMeetingStandards(password);
+            if (safePassword) {
+                user.getCredential().setPassword(BCryptPasswordEncoder.getInstance.encode(password));
                 userRepository.save(user);
-            } else
-                throw new UserNotFoundException();
+            } else {
+                throw new UnsafePasswordException();
+            }
         } catch (UserNotFoundException ex) {
-            log.error(ex.getMessage());
+            log.error("Recovery token not found: {}", recoveryToken, ex);
         }
     }
 }

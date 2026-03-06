@@ -1,12 +1,9 @@
 package be.hexter.hexter.controller;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
 
 import org.json.JSONObject;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,14 +42,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final RecoveryService recoveryService;
+    private final AuthenticationTokenService authenticationTokenService;
 
-    @Autowired
-    private RecoveryService recoveryService;
-
-    @Autowired
-    private AuthenticationTokenService authenticationTokenService;
+    public UserController(
+            UserService userService,
+            RecoveryService recoveryService,
+            AuthenticationTokenService authenticationTokenService) {
+        this.userService = userService;
+        this.recoveryService = recoveryService;
+        this.authenticationTokenService = authenticationTokenService;
+    }
 
     @PutMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<Object> registerUser(@RequestBody @Valid User user) {
@@ -127,7 +127,7 @@ public class UserController {
         try {
             GMailSender.authenticate("patryk.sitko.algemeen@gmail.com", "bbfc vvue oxdf qfwk").send(
                     List.of(email), "Hexter password reset",
-                    "Your reset token is: " + resetPasswordToken + ".");
+                    String.format("Your password reset token is: %s", resetPasswordToken));
             userService.storeCredentialRecoveryToken(user, resetPasswordToken);
         } catch (MessagingException e) {
             log.error(e.getMessage());

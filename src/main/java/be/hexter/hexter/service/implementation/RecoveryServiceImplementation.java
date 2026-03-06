@@ -14,14 +14,17 @@ import be.hexter.hexter.service.exception.CredentialRecoveryTokenNotFound;
 @Service
 public class RecoveryServiceImplementation implements RecoveryService {
 
-    @Autowired
-    CredentialRecoveryRepository credentialRecoveryRepository;
+    private final CredentialRecoveryRepository credentialRecoveryRepository;
+
+    public RecoveryServiceImplementation(CredentialRecoveryRepository credentialRecoveryRepository) {
+        this.credentialRecoveryRepository = credentialRecoveryRepository;
+    }
 
     @Override
     public CredentialRecovery findByRecoveryToken(String token) {
         final CredentialRecovery credentialRecovery = credentialRecoveryRepository.findByRecoveryToken(token);
 
-        if (credentialRecovery instanceof CredentialRecovery) {
+        if (credentialRecovery != null) {
             return credentialRecovery;
         }
         throw new CredentialRecoveryTokenNotFound();
@@ -34,7 +37,8 @@ public class RecoveryServiceImplementation implements RecoveryService {
 
     @Override
     public void deleteRecoveryToken(String token) {
-        credentialRecoveryRepository.delete(this.findByRecoveryToken(token));
+        CredentialRecovery credentialRecovery = this.findByRecoveryToken(token);
+        credentialRecoveryRepository.delete(credentialRecovery);
     }
 
 }
