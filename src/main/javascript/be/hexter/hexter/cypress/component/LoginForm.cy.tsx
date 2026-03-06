@@ -52,10 +52,7 @@ describe("LoginForm Component", () => {
     cy.mount(<LoginForm onSubmit={cy.stub()} />);
 
     cy.get('[data-testid="email"]').type("test@example.com");
-    cy.get('[data-testid="email"]').should(
-      "have.value",
-      "test@example.com"
-    );
+    cy.get('[data-testid="email"]').should("have.value", "test@example.com");
 
     cy.get('[data-testid="password"]').type("password123");
     cy.get('[data-testid="password"]').should("have.value", "password123");
@@ -74,7 +71,7 @@ describe("LoginForm Component", () => {
       Cypress.sinon.match({
         email: "test@example.com",
         password: "password123",
-      })
+      }),
     );
   });
 
@@ -89,7 +86,7 @@ describe("LoginForm Component", () => {
       Cypress.sinon.match({
         email: "",
         password: "",
-      })
+      }),
     );
   });
 });

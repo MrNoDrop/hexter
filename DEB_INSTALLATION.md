@@ -17,12 +17,14 @@ Before installing the .deb package, ensure your system has:
    - `java-17-openjdk-headless`
 
 Install Java 17:
+
 ```bash
 sudo apt update
 sudo apt install openjdk-17-jre-headless
 ```
 
 2. **MySQL Server** (for production use)
+
 ```bash
 sudo apt install mysql-server
 ```
@@ -56,36 +58,43 @@ The .deb package installs the following:
 ## Service Management
 
 ### Start the service
+
 ```bash
 sudo systemctl start hexter
 ```
 
 ### Stop the service
+
 ```bash
 sudo systemctl stop hexter
 ```
 
 ### Enable for automatic startup at boot
+
 ```bash
 sudo systemctl enable hexter
 ```
 
 ### Disable automatic startup
+
 ```bash
 sudo systemctl disable hexter
 ```
 
 ### Check service status
+
 ```bash
 sudo systemctl status hexter
 ```
 
 ### View logs in real-time
+
 ```bash
 sudo journalctl -u hexter -f
 ```
 
 ### View recent logs
+
 ```bash
 sudo journalctl -u hexter -n 50
 ```
@@ -95,6 +104,7 @@ sudo journalctl -u hexter -n 50
 The application configuration is stored in `/etc/hexter/application.properties`
 
 ### For Development (H2 In-Memory Database):
+
 ```properties
 spring.profiles.active=dev
 ```
@@ -111,6 +121,7 @@ spring.datasource.password=your_secure_password
 ```
 
 Create the MySQL database:
+
 ```bash
 mysql -u root -p
 mysql> CREATE DATABASE hexter;
@@ -120,6 +131,7 @@ mysql> FLUSH PRIVILEGES;
 ```
 
 Save the configuration and restart the service:
+
 ```bash
 sudo systemctl restart hexter
 ```
@@ -132,6 +144,7 @@ After starting the service, the application will be available at:
 - **Frontend:** `http://localhost:3000` (if deployed separately)
 
 ### Available Endpoints:
+
 - `POST /api/user/register` - Register new user
 - `POST /api/user/login` - User login
 - `POST /api/user/validate-authentication-token` - Validate token
@@ -151,11 +164,13 @@ sudo dpkg -r hexter
 ```
 
 This will:
+
 - Stop the service
 - Remove the application files
 - Keep configuration files in `/etc/hexter/` for reference
 
 To completely remove configuration files as well:
+
 ```bash
 sudo apt purge hexter
 ```
@@ -165,11 +180,13 @@ sudo apt purge hexter
 ### Service fails to start
 
 Check the logs:
+
 ```bash
 sudo journalctl -u hexter -n 50
 ```
 
 Common issues:
+
 - **Java not found:** Ensure Java 17 is installed
 - **Port 8080 in use:** Change in `/etc/hexter/application.properties` (server.port=XXXX)
 - **Database connection error:** Verify MySQL is running and credentials are correct
@@ -179,17 +196,20 @@ Common issues:
 For production systems with limited memory, add JVM options to `/etc/systemd/system/hexter.service`:
 
 Edit the service file:
+
 ```bash
 sudo systemctl edit hexter
 ```
 
 Add to the `[Service]` section:
+
 ```
 Environment="JAVA_OPTS=-Xmx512m -Xms256m"
 ExecStart=/usr/bin/java $JAVA_OPTS -jar /usr/share/hexter/hexter-0.0.1-SNAPSHOT.jar
 ```
 
 Reload and restart:
+
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl restart hexter

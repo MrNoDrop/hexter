@@ -84,7 +84,7 @@ describe("User Login Flow", () => {
 
   it("should validate token on protected pages", () => {
     cy.visit("/dashboard");
-    
+
     cy.window().then((win) => {
       const token = win.localStorage.getItem("authToken");
       if (!token) {

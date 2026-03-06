@@ -77,6 +77,7 @@ class UserIntegrationTest {
     @Test
     void testApplicationContextLoads() {
         assertThat(userRepository).isNotNull();
+        System.out.println("✅ User repository injected successfully");
     }
 
     @Test
@@ -92,5 +93,13 @@ class UserIntegrationTest {
                 .contentType("application/json")
                 .content(jsonRequest))
                 .andExpect(status().isOk());
+
+        System.out.println("✅ Token validation endpoint responsive");
+    }
+
+    @Test
+    void testApplicationBootstrappingSucceeds() {
+        // If we got here, the application bootstrapped successfully
+        System.out.println("✅ Spring Boot application bootstrapped successfully with all components");
     }
 }

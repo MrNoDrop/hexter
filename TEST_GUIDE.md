@@ -7,6 +7,7 @@ This document provides comprehensive instructions for running tests in the Hexte
 ## Backend Testing (Java/Spring Boot)
 
 ### Prerequisites
+
 - Java 17 JDK
 - Maven 3.6+
 - MySQL Server (for production integration tests)
@@ -29,6 +30,7 @@ src/test/java/be/hexter/hexter/
 ### Running Backend Tests
 
 #### Run All Tests
+
 ```bash
 cd /home/patryk/Documenten/hexter
 export JAVA_HOME=/home/patryk/.jdk/jdk-17.0.16
@@ -36,22 +38,26 @@ mvn clean test
 ```
 
 #### Run Specific Test Class
+
 ```bash
 mvn test -Dtest=UserServiceImplementationTest
 ```
 
 #### Run Tests with Coverage Report
+
 ```bash
 mvn clean test jacoco:report
 # Coverage report will be generated at: target/site/jacoco/index.html
 ```
 
 #### Run Tests with Detailed Output
+
 ```bash
 mvn test -X
 ```
 
 #### Skip Tests during Build
+
 ```bash
 mvn clean install -DskipTests
 ```
@@ -59,6 +65,7 @@ mvn clean install -DskipTests
 ### Test Coverage
 
 The project uses **JaCoCo** for code coverage analysis. Coverage reports include:
+
 - Line coverage
 - Branch coverage
 - Method coverage
@@ -67,6 +74,7 @@ The project uses **JaCoCo** for code coverage analysis. Coverage reports include
 Generated reports are located in: `target/site/jacoco/index.html`
 
 ### Test Coverage Goals
+
 - **Target:** 80-90% overall coverage
 - **Critical paths:** 95%+ (authentication, registration, recovery)
 - **Utilities:** 50%+ (optional, nice-to-have)
@@ -74,36 +82,44 @@ Generated reports are located in: `target/site/jacoco/index.html`
 ### Backend Test Categories
 
 #### 1. Unit Tests
+
 Test individual service methods in isolation using Mockito for dependency mocking.
 
 **Example:** `UserServiceImplementationTest.java`
+
 - Tests for `registerUser()` with valid/invalid inputs
 - Tests for `authenticateUser()` with various scenarios
 - Tests for token validation
 - Tests for recovery token handling
 
 **Run unit tests only:**
+
 ```bash
 mvn test -Dtest=*ServiceImplementationTest
 ```
 
 #### 2. Integration Tests
+
 Test full workflows with real database connections.
 
 **Example:** `UserIntegrationTest.java`
+
 - End-to-end registration workflow
 - Login after registration
 - API endpoint integration
 
 **Run integration tests only:**
+
 ```bash
 mvn test -Dtest=*IntegrationTest
 ```
 
 #### 3. Controller/REST Tests
+
 Test REST endpoints using MockMvc.
 
 **Example:** `UserControllerTest.java`
+
 - POST /api/user/register
 - POST /api/user/login
 - POST /api/user/validate-authentication-token
@@ -111,6 +127,7 @@ Test REST endpoints using MockMvc.
 - POST /api/user/recover-password
 
 **Run controller tests only:**
+
 ```bash
 mvn test -Dtest=*ControllerTest
 ```
@@ -132,6 +149,7 @@ firefox target/site/jacoco/index.html  # Linux
 ## Frontend Testing (React + Cypress)
 
 ### Prerequisites
+
 - Node.js 16+ (verify: `node --version`)
 - npm 8+ (verify: `npm --version`)
 - Port 3000 available (for React dev server)
@@ -171,6 +189,7 @@ npm install --save-dev @testing-library/react @testing-library/jest-dom
 ### Running Frontend Tests
 
 #### 1. Open Cypress Test Runner (Interactive Mode)
+
 ```bash
 cd src/main/javascript/be/hexter/hexter
 npm run test:e2e:open
@@ -183,6 +202,7 @@ npm run test:e2e:open
 ```
 
 #### 2. Run All E2E Tests (Headless Mode)
+
 ```bash
 cd src/main/javascript/be/hexter/hexter
 npm run test:e2e
@@ -191,6 +211,7 @@ npm run test:e2e
 ```
 
 #### 3. Run Specific E2E Test File
+
 ```bash
 cd src/main/javascript/be/hexter/hexter
 
@@ -208,6 +229,7 @@ npx cypress run --spec "cypress/e2e/api.cy.ts"
 ```
 
 #### 4. Run Component Tests
+
 ```bash
 cd src/main/javascript/be/hexter/hexter
 
@@ -219,6 +241,7 @@ npm run test:component
 ```
 
 #### 5. Run Unit Tests with Jest
+
 ```bash
 cd src/main/javascript/be/hexter/hexter
 
@@ -233,6 +256,7 @@ npm test -- --coverage --watchAll=false
 ```
 
 #### 6. Run All Frontend Tests Together
+
 ```bash
 cd src/main/javascript/be/hexter/hexter
 npm run test:all
@@ -243,12 +267,13 @@ npm run test:all
 Before running frontend tests, ensure:
 
 1. **Backend API Server is Running**
+
    ```bash
    # In a separate terminal
    cd /home/patryk/Documenten/hexter
    export JAVA_HOME=/home/patryk/.jdk/jdk-17.0.16
    java -jar target/hexter-0.0.1-SNAPSHOT.jar
-   
+
    # Verify: curl http://localhost:8080/api/user/validate-authentication-token
    ```
 
@@ -257,17 +282,19 @@ Before running frontend tests, ensure:
    - For integration: Update application.properties with MySQL credentials
 
 3. **Frontend Dev Server (Optional, for open tests)**
+
    ```bash
    # In another terminal
    cd src/main/javascript/be/hexter/hexter
    npm start
-   
+
    # Accessible at: http://localhost:3000
    ```
 
 ### Frontend Test Examples
 
 #### Registration Tests (registration.cy.ts)
+
 - ✅ Display home page
 - ✅ Navigate to registration page
 - ✅ Successfully register new user
@@ -276,6 +303,7 @@ Before running frontend tests, ensure:
 - ✅ Verify password matches confirmation
 
 #### Login Tests (login.cy.ts)
+
 - ✅ Display login page
 - ✅ Successful login with valid credentials
 - ✅ Error handling for invalid email
@@ -287,6 +315,7 @@ Before running frontend tests, ensure:
 - ✅ Token validation on protected pages
 
 #### Password Recovery Tests (password-recovery.cy.ts)
+
 - ✅ Display forgot password page
 - ✅ Request password reset
 - ✅ Invalid user hash handling
@@ -296,6 +325,7 @@ Before running frontend tests, ensure:
 - ✅ Password strength requirements
 
 #### API Integration Tests (api.cy.ts)
+
 - ✅ User registration API
 - ✅ User login API
 - ✅ Authentication token validation
@@ -375,6 +405,7 @@ echo -e "\n${GREEN}All tests completed successfully!${NC}"
 ```
 
 Make it executable and run:
+
 ```bash
 chmod +x run-all-tests.sh
 ./run-all-tests.sh
@@ -383,12 +414,14 @@ chmod +x run-all-tests.sh
 ## Test Naming Conventions
 
 ### Backend Tests
+
 - **Unit Tests:** `*ServiceImplementationTest.java`, `*ControllerTest.java`
 - **Integration Tests:** `*IntegrationTest.java`
 - **Test Methods:** `testDescriptionOfWhatIsBeingTested()`
   - Example: `testRegisterUserSuccess()`, `testLoginWithInvalidEmail()`
 
 ### Frontend Tests
+
 - **E2E Tests:** `*.cy.ts` in `cypress/e2e/`
 - **Component Tests:** `*.cy.tsx` in `cypress/component/`
 - **Test Suites:** `describe("Feature Name", () => { ... })`
@@ -399,11 +432,13 @@ chmod +x run-all-tests.sh
 ### Backend Test Debugging
 
 1. **View detailed test output:**
+
    ```bash
    mvn test -X
    ```
 
 2. **Run single test with debugging:**
+
    ```bash
    mvn test -Dtest=UserServiceImplementationTest#testRegisterUserSuccess
    ```
@@ -418,9 +453,11 @@ chmod +x run-all-tests.sh
 ### Frontend Test Debugging
 
 1. **Open Cypress Interactive Mode:**
+
    ```bash
    npm run test:e2e:open
    ```
+
    - Inspect elements in real-time
    - Step through tests
    - Check network requests
@@ -430,6 +467,7 @@ chmod +x run-all-tests.sh
    - Enable in `cypress.config.ts`: `video: true`
 
 3. **Enable debug logs:**
+
    ```bash
    DEBUG=cypress:* npm run test:e2e
    ```
@@ -442,6 +480,7 @@ chmod +x run-all-tests.sh
 ## Test Reports and Metrics
 
 ### Backend Coverage Report
+
 ```bash
 # Generate JaCoCo coverage report
 mvn jacoco:report
@@ -452,6 +491,7 @@ xdg-open target/site/jacoco/index.html  # Linux
 ```
 
 ### Frontend Coverage Report
+
 ```bash
 npm test -- --coverage --watchAll=false
 
@@ -462,14 +502,18 @@ open coverage/lcov-report/index.html
 ## Known Issues and Solutions
 
 ### Issue: Cypress Hangs on Installation
-**Solution:** 
+
+**Solution:**
+
 ```bash
 npm install cypress --no-save 2>&1 &
 # Let it run in background, check progress periodically
 ```
 
 ### Issue: "Port 3000 already in use"
+
 **Solution:**
+
 ```bash
 # Find and kill process using port 3000
 lsof -ti :3000 | xargs kill -9
@@ -479,7 +523,9 @@ PORT=3001 npm start
 ```
 
 ### Issue: "Backend API not responding"
+
 **Solution:**
+
 ```bash
 # Verify backend is running
 curl http://localhost:8080/api/user/validate-authentication-token -H "Content-Type: application/json" -d '{"fingerprint":"test","authenticationToken":"test"}'
@@ -489,7 +535,9 @@ tail -f /var/log/hexter/hexter.log
 ```
 
 ### Issue: Test Timeouts
+
 **Solution:**
+
 ```bash
 # Increase timeout in cypress.config.ts
 export default defineConfig({
