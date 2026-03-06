@@ -1073,8 +1073,8 @@ sudo systemctl restart hexter
 
 **Patryk Sitko**
 
-- GitHub: [@patryksitko](https://github.com/patryksitko)
-- Email: patryk@example.com
+- GitHub: [@patryksitko](https://github.com/mrnodrop)
+- Email: patryk.sitko.algemeen@gmail.com
 
 ---
 
