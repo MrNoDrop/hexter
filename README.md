@@ -193,7 +193,58 @@ git --version
 
 ## ⚡ Quick Start Guide
 
-For experienced developers, here's the quick version:
+### Option 1: Automated Setup (Recommended) 🚀
+
+We provide system-agnostic setup scripts that automatically install all dependencies and configure your environment.
+
+#### For Linux, macOS, Git Bash, or WSL:
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/hexter.git
+cd hexter
+
+# Run the setup script
+./setup.sh
+
+# The script will:
+# ✅ Detect your OS and distribution
+# ✅ Install Java 17, Maven, Node.js (if missing)
+# ✅ Install MySQL (optional)
+# ✅ Configure JAVA_HOME automatically
+# ✅ Build the entire project
+# ✅ Install frontend dependencies
+```
+
+**Setup Options:**
+
+```bash
+./setup.sh --auto          # Fully automatic (no prompts)
+./setup.sh --skip-db       # Skip database setup
+./setup.sh --help          # Show detailed help
+```
+
+#### For Windows (Native Command Prompt/PowerShell):
+
+```cmd
+git clone https://github.com/yourusername/hexter.git
+cd hexter
+setup.bat
+```
+
+Or use **Git Bash/WSL** for better experience:
+
+```bash
+bash setup.sh
+```
+
+For detailed setup instructions, see [SETUP_INSTRUCTIONS.md](SETUP_INSTRUCTIONS.md).
+
+---
+
+### Option 2: Manual Setup
+
+For experienced developers, here's the quick manual version:
 
 ```bash
 # 1. Clone the repository
