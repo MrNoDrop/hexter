@@ -3,7 +3,7 @@
 ## Package Information
 
 - **Package Name:** hexter
-- **Version:** 0.0.1
+- **Version:** <version> (e.g., 0.0.2)
 - **Architecture:** all (architecture-independent, requires Java 17)
 - **Size:** ~40 MB
 - **Maintainer:** Patryk Sitko
@@ -34,13 +34,13 @@ sudo apt install mysql-server
 ### Option 1: Using dpkg
 
 ```bash
-sudo dpkg -i hexter_0.0.1_all.deb
+sudo dpkg -i hexter_<version>_all.deb
 ```
 
 ### Option 2: Using apt
 
 ```bash
-sudo apt install ./hexter_0.0.1_all.deb
+sudo apt install ./hexter_<version>_all.deb
 ```
 
 The apt method is preferred as it handles dependencies automatically.
@@ -50,7 +50,7 @@ The apt method is preferred as it handles dependencies automatically.
 The .deb package installs the following:
 
 ```
-/usr/share/hexter/hexter-0.0.1-SNAPSHOT.jar  # Application JAR
+/usr/share/hexter/hexter-<version>-SNAPSHOT.jar  # Application JAR
 /etc/hexter/application.properties             # Configuration file
 /etc/systemd/system/hexter.service             # Systemd service definition
 ```
@@ -140,8 +140,8 @@ sudo systemctl restart hexter
 
 After starting the service, the application will be available at:
 
-- **Backend API:** `http://localhost:8080/api`
-- **Frontend:** `http://localhost:3000` (if deployed separately)
+- **Frontend & API:** `http://localhost:8080`
+- **Backend API Base:** `http://localhost:8080/api`
 
 ### Available Endpoints:
 
@@ -205,7 +205,7 @@ Add to the `[Service]` section:
 
 ```
 Environment="JAVA_OPTS=-Xmx512m -Xms256m"
-ExecStart=/usr/bin/java $JAVA_OPTS -jar /usr/share/hexter/hexter-0.0.1-SNAPSHOT.jar
+ExecStart=/usr/bin/java $JAVA_OPTS -jar /usr/share/hexter-<version>-SNAPSHOT.jar
 ```
 
 Reload and restart:

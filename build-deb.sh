@@ -133,10 +133,19 @@ echo -e "${BLUE}╚════════════════════�
 echo ""
 
 # Step 1: Build Maven project
-echo -e "${YELLOW}[1/6] Building Maven project...${NC}"
+echo -e "${YELLOW}[1/6] Building Maven project (Production Mode)...${NC}"
 export JAVA_HOME
 cd "${PROJECT_ROOT}"
-mvn clean package -DskipTests -q 2>&1 | grep -E "BUILD|ERROR" || true
+
+# If version is being bumped, update pom.xml version to match
+if [ "${BUMP_MODE}" != "none" ]; then
+    ./mvnw versions:set -DnewVersion="${VERSION}-SNAPSHOT" -q -DgenerateBackupPoms=false
+fi
+
+./mvnw clean package -Dmaven.test.skip=true -Pprod -e 2>&1 | grep -E "BUILD|ERROR" || true
+
+# Update the expected JAR path based on the version we just built
+JAR_FILE_ACTUAL="${PROJECT_ROOT}/target/hexter-${VERSION}-SNAPSHOT.jar"
 
 if [ ! -f "${JAR_FILE_ACTUAL}" ]; then
     echo -e "${RED}✗ Maven build failed - JAR not found at ${JAR_FILE_ACTUAL}${NC}"
@@ -219,7 +228,7 @@ echo ""
 
 # Step 4: Create systemd service file
 echo -e "${YELLOW}[4/6] Creating systemd service configuration...${NC}"
-cat > "${DEB_DIR}/etc/systemd/system/hexter.service" << 'EOF'
+cat > "${DEB_DIR}/etc/systemd/system/hexter.service" << EOF
 [Unit]
 Description=Hexter Social Media Platform
 After=network-online.target mysql.service
@@ -229,8 +238,8 @@ Wants=network-online.target
 Type=simple
 User=root
 WorkingDirectory=/usr/share/hexter
-ExecStart=/usr/bin/java -jar /usr/share/hexter/hexter-0.0.1-SNAPSHOT.jar
-ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/bin/java -jar /usr/share/hexter/hexter-${VERSION}-SNAPSHOT.jar
+ExecReload=/bin/kill -HUP \$MAINPID
 KillMode=process
 Restart=on-failure
 RestartSec=5
@@ -274,7 +283,7 @@ echo ""
 # Step 5: Copy JAR and build .deb
 echo -e "${YELLOW}[5/6] Packaging .deb file...${NC}"
 cp "${JAR_FILE_ACTUAL}" "${DEB_DIR}/usr/share/hexter/"
-echo -e "  Copied hexter-0.0.1-SNAPSHOT.jar (${JAR_SIZE})"
+echo -e "  Copied $(basename "${JAR_FILE_ACTUAL}") (${JAR_SIZE})"
 
 # Build the .deb package
 cd "${BUILD_DIR}"

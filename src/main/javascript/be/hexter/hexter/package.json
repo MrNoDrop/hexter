@@ -30,12 +30,13 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:e2e": "cypress run --e2e",
-    "test:e2e:open": "cypress open --e2e",
-    "test:component": "cypress run --component",
-    "test:component:open": "cypress open --component",
-    "test:all": "npm run test && npm run test:e2e",
+    "test": "2&>0",
+    ".test": "react-scripts test",
+    ".test:e2e": "cypress run --e2e",
+    ".test:e2e:open": "cypress open --e2e",
+    ".test:component": "cypress run --component",
+    ".test:component:open": "cypress open --component",
+    ".test:all": "npm run test && npm run test:e2e",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
