@@ -47,15 +47,15 @@ A full-stack JavaEE implementation of user authentication with registration, log
 
 ### Minimum Requirements
 
-| Component | Version | Notes |
-|-----------|---------|-------|
-| **Java** | 17+ | JDK required (not JRE) |
-| **Node.js** | 16+ | For frontend development |
-| **npm** | 8+ | Comes with Node.js |
-| **Maven** | 3.6+ | Build tool (included via mvnw) |
-| **MySQL** | 8.0+ | Database server |
-| **RAM** | 2 GB | For running backend + frontend |
-| **Disk Space** | 5 GB | For dependencies and build artifacts |
+| Component      | Version | Notes                                |
+| -------------- | ------- | ------------------------------------ |
+| **Java**       | 17+     | JDK required (not JRE)               |
+| **Node.js**    | 16+     | For frontend development             |
+| **npm**        | 8+      | Comes with Node.js                   |
+| **Maven**      | 3.6+    | Build tool (included via mvnw)       |
+| **MySQL**      | 8.0+    | Database server                      |
+| **RAM**        | 2 GB    | For running backend + frontend       |
+| **Disk Space** | 5 GB    | For dependencies and build artifacts |
 
 ### Supported Operating Systems
 
@@ -313,6 +313,7 @@ export WEB_JAVA_IP2LOCATION_DB_PASSWORD=secure_password_here
 ```
 
 This will:
+
 - ✅ Download all dependencies
 - ✅ Compile Java source code
 - ✅ Build frontend (Node packages)
@@ -378,15 +379,15 @@ ls -la build/
 
 Your `package.json` includes:
 
-| Package | Purpose |
-|---------|---------|
-| react | UI framework |
-| react-dom | DOM rendering |
+| Package          | Purpose             |
+| ---------------- | ------------------- |
+| react            | UI framework        |
+| react-dom        | DOM rendering       |
 | react-router-dom | Client-side routing |
-| axios | HTTP client |
-| typescript | Type safety |
-| cypress | E2E testing |
-| jest | Unit testing |
+| axios            | HTTP client         |
+| typescript       | Type safety         |
+| cypress          | E2E testing         |
+| jest             | Unit testing        |
 
 ---
 
@@ -1071,6 +1072,7 @@ sudo systemctl restart hexter
 ## 👤 Author
 
 **Patryk Sitko**
+
 - GitHub: [@patryksitko](https://github.com/patryksitko)
 - Email: patryk@example.com
 
