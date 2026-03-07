@@ -16,12 +16,20 @@ public class GMailSender {
 
     private String username;// change accordingly
     private String password;
+    private final Session session;
+    private final Message message;
 
     private static GMailSender mailSender;
 
     private GMailSender(String username, String password) {
         this.username = username;
         this.password = password;
+        session = Session.getInstance(PROPS, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+        message = new MimeMessage(session);
     }
 
     public static GMailSender authenticate(String username, String password) {
@@ -38,20 +46,6 @@ public class GMailSender {
         PROPS.put("mail.smtp.starttls.enable", "true");
         PROPS.put("mail.smtp.host", "smtp.gmail.com");
         PROPS.put("mail.smtp.port", "587");
-    }
-
-    private final Session session;
-    {
-        session = Session.getInstance(PROPS, new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
-    }
-
-    private final Message message;
-    {
-        message = new MimeMessage(session);
     }
 
     public void send(List<String> recipients, String subject, String msg)
