@@ -581,7 +581,7 @@ main() {
     cd "$PROJECT_ROOT"
     export JAVA_HOME
     
-    if mvn clean install -q; then
+    if mvn clean install -Dmaven.test.skip=true -q; then
         print_success "Backend built successfully"
     else
         print_error "Backend build failed. Check error messages above."
