@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -70,7 +69,7 @@ public class CredentialRecovery implements Serializable, Cloneable {
     @NonNull
     @JsonProperty("credential")
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "credential_id", value = ConstraintMode.CONSTRAINT), referencedColumnName = "id")
+    @JoinColumn(name = "credential_id", nullable = false, foreignKey = @ForeignKey(name = "fk_recovery_credential"))
     public Credential credential;
 
     public String toJSON() {

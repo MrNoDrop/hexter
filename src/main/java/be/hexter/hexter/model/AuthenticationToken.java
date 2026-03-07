@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Column;
-import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -60,10 +59,10 @@ public class AuthenticationToken implements Serializable, Cloneable {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @ManyToOne
     @JsonProperty("credential")
     @ToString.Exclude
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "credential_id", value = ConstraintMode.CONSTRAINT), referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "credential_id", nullable = false, foreignKey = @ForeignKey(name = "fk_token_credential"))
     private Credential credential;
 
     @NonNull
